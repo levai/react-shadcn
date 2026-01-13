@@ -41,35 +41,35 @@ export function LoginForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className='space-y-4 w-full max-w-sm'>
-      <div className='space-y-2'>
-        <Label htmlFor='email'>{t('form.email')}</Label>
+    <form onSubmit={handleSubmit} className="space-y-4 w-full max-w-sm">
+      <div className="space-y-2">
+        <Label htmlFor="email">{t('form.email')}</Label>
         <Input
-          id='email'
-          type='email'
+          id="email"
+          type="email"
           value={formData.email}
           onChange={e => setFormData({ ...formData, email: e.target.value })}
-          placeholder='admin@example.com'
+          placeholder="admin@example.com"
           required
           disabled={isLoading}
         />
       </div>
 
-      <div className='space-y-2'>
-        <Label htmlFor='password'>{t('form.password')}</Label>
+      <div className="space-y-2">
+        <Label htmlFor="password">{t('form.password')}</Label>
         <Input
-          id='password'
-          type='password'
+          id="password"
+          type="password"
           value={formData.password}
           onChange={e => setFormData({ ...formData, password: e.target.value })}
-          placeholder='123456'
+          placeholder="123456"
           required
           disabled={isLoading}
         />
       </div>
 
-      <Button type='submit' className='w-full' disabled={isLoading}>
-        {isLoading && <Loader2 className='mr-2 h-4 w-4 animate-spin' />}
+      <Button type="submit" className="w-full" disabled={isLoading}>
+        {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
         {isLoading ? t('common:status.loading') : t('login')}
       </Button>
     </form>

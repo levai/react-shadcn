@@ -5,13 +5,7 @@ import { useAppStore } from '@/shared/stores'
 import { useTranslation } from '@/shared/i18n'
 import { menuRoutes, type AppRouteConfig } from '@/routes'
 import { cn } from '@/shared/lib'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-  TooltipArrow,
-} from '@/shared/ui'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, TooltipArrow } from '@/shared/ui'
 
 // 导航项类型
 type NavItemType = {
@@ -47,9 +41,7 @@ const SidebarNavItem = memo(function SidebarNavItem({
         cn(
           'group flex items-center rounded-lg transition-all duration-150',
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background',
-          isCollapsed
-            ? 'h-11 w-11 justify-center mx-auto'
-            : 'h-11 px-3 gap-3',
+          isCollapsed ? 'h-11 w-11 justify-center mx-auto' : 'h-11 px-3 gap-3',
           isActive
             ? 'bg-primary/15 text-primary shadow-sm'
             : 'text-muted-foreground hover:bg-card/80 hover:text-foreground'
@@ -62,15 +54,11 @@ const SidebarNavItem = memo(function SidebarNavItem({
             <Icon
               className={cn(
                 'shrink-0 transition-colors h-5 w-5',
-                isActive
-                  ? 'text-primary'
-                  : 'text-muted-foreground group-hover:text-foreground'
+                isActive ? 'text-primary' : 'text-muted-foreground group-hover:text-foreground'
               )}
             />
           )}
-          {!isCollapsed && (
-            <span className="text-sm font-medium truncate">{item.label}</span>
-          )}
+          {!isCollapsed && <span className="text-sm font-medium truncate">{item.label}</span>}
         </>
       )}
     </NavLink>
@@ -95,7 +83,7 @@ const SidebarNavItem = memo(function SidebarNavItem({
       {content}
       {hasChildren && (
         <div className="ml-9 space-y-1">
-          {item.children!.map((child) => (
+          {item.children!.map(child => (
             <NavLink
               key={child.path}
               to={child.path}
@@ -136,7 +124,7 @@ const SidebarNavGroup = memo(function SidebarNavGroup({
   isFirst: boolean
 }) {
   return (
-    <div className={cn(isCollapsed ? (!isFirst && 'mt-8') : (!isFirst && 'mt-6'))}>
+    <div className={cn(isCollapsed ? !isFirst && 'mt-8' : !isFirst && 'mt-6')}>
       {/* 分组标题 */}
       {!isCollapsed ? (
         <div className="px-3 mb-2">
@@ -151,13 +139,8 @@ const SidebarNavGroup = memo(function SidebarNavGroup({
       )}
 
       {/* 导航项列表 */}
-      <div
-        className={cn(
-          'flex flex-col',
-          isCollapsed ? 'gap-3 px-1.5' : 'gap-1 px-2'
-        )}
-      >
-        {group.items.map((item) => (
+      <div className={cn('flex flex-col', isCollapsed ? 'gap-3 px-1.5' : 'gap-1 px-2')}>
+        {group.items.map(item => (
           <SidebarNavItem key={item.path} item={item} isCollapsed={isCollapsed} />
         ))}
       </div>
@@ -240,18 +223,19 @@ const routeTitleMap: Record<string, string> = {
 }
 
 // 将路由配置转换为导航分组
-function convertRoutesToNavGroups(routes: AppRouteConfig[], t: (key: string) => string): NavGroupType[] {
+function convertRoutesToNavGroups(
+  routes: AppRouteConfig[],
+  t: (key: string) => string
+): NavGroupType[] {
   // 过滤出需要显示的菜单项
-  const visibleRoutes = routes.filter(
-    (route) => route.meta && !route.meta.hideInMenu && route.path
-  )
+  const visibleRoutes = routes.filter(route => route.meta && !route.meta.hideInMenu && route.path)
 
   // 将所有菜单项放在一个默认分组中
-  const items: NavItemType[] = visibleRoutes.map((route) => {
+  const items: NavItemType[] = visibleRoutes.map(route => {
     // 优先使用翻译键，如果没有映射则使用原始 title
     const translationKey = routeTitleMap[route.path || '']
-    const label = translationKey ? t(translationKey) : (route.meta?.title || route.path || '')
-    
+    const label = translationKey ? t(translationKey) : route.meta?.title || route.path || ''
+
     return {
       id: route.path || '',
       path: route.path || '#',
@@ -293,11 +277,8 @@ function Sidebar() {
   const handleResize = useCallback(
     (delta: number) => {
       if (isCollapsed) return
-      setSidebarWidth((prev) => {
-        const newWidth = Math.min(
-          SIDEBAR_MAX_WIDTH,
-          Math.max(SIDEBAR_MIN_WIDTH, prev + delta)
-        )
+      setSidebarWidth(prev => {
+        const newWidth = Math.min(SIDEBAR_MAX_WIDTH, Math.max(SIDEBAR_MIN_WIDTH, prev + delta))
         return newWidth
       })
     },
@@ -335,9 +316,7 @@ function Sidebar() {
       )}
     >
       {/* 拖动调整宽度手柄 - 仅展开时显示 */}
-      {!isCollapsed && (
-        <ResizeHandle onResize={handleResize} onResizeEnd={handleResizeEnd} />
-      )}
+      {!isCollapsed && <ResizeHandle onResize={handleResize} onResizeEnd={handleResizeEnd} />}
 
       {/* Logo 区域 */}
       <div
@@ -381,23 +360,18 @@ function Sidebar() {
 
       {/* 底部：收起菜单按钮 */}
       <div
-        className={cn(
-          'py-3 border-t border-border/50 shrink-0',
-          isCollapsed ? 'px-1.5' : 'px-2'
-        )}
+        className={cn('py-3 border-t border-border/50 shrink-0', isCollapsed ? 'px-1.5' : 'px-2')}
       >
         <TooltipProvider delayDuration={300}>
           <Tooltip>
             <TooltipTrigger asChild>
               <button
                 onClick={handleToggle}
-                  className={cn(
-                    'flex items-center rounded-lg transition-all duration-150',
-                    'text-muted-foreground hover:text-foreground hover:bg-card/80',
-                    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
-                  isCollapsed
-                    ? 'h-11 w-11 justify-center mx-auto'
-                    : 'h-10 w-full px-3 gap-3'
+                className={cn(
+                  'flex items-center rounded-lg transition-all duration-150',
+                  'text-muted-foreground hover:text-foreground hover:bg-card/80',
+                  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
+                  isCollapsed ? 'h-11 w-11 justify-center mx-auto' : 'h-10 w-full px-3 gap-3'
                 )}
               >
                 {isCollapsed ? (

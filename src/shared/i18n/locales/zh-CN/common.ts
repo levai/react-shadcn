@@ -1,6 +1,6 @@
 /**
  * 通用翻译 - 简体中文
- * 
+ *
  * 使用嵌套结构，按功能分组，更易维护
  */
 export default {
@@ -26,7 +26,7 @@ export default {
     close: '关闭',
     open: '打开',
   },
-  
+
   // 状态
   status: {
     loading: '加载中...',
@@ -36,28 +36,28 @@ export default {
     info: '提示',
     noData: '暂无数据',
   },
-  
+
   // 消息提示
   messages: {
     operationSuccess: '操作成功',
     operationFailed: '操作失败',
     confirmDelete: '确认删除吗？',
   },
-  
+
   // 时间相关
   time: {
     today: '今天',
     yesterday: '昨天',
     tomorrow: '明天',
   },
-  
+
   // 表单验证
   validation: {
     required: '此项为必填项',
     invalidEmail: '请输入有效的邮箱地址',
     invalidPhone: '请输入有效的手机号码',
   },
-  
+
   // 分页
   pagination: {
     total: '共 {{total}} 条',

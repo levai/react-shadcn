@@ -3,10 +3,10 @@ import { useState, useEffect, useRef } from 'react'
 /**
  * 媒体查询 Hook
  * 监听窗口尺寸变化，返回是否匹配指定的媒体查询
- * 
+ *
  * @param query - 媒体查询字符串，如 '(min-width: 768px)'
  * @returns 是否匹配媒体查询
- * 
+ *
  * @example
  * ```tsx
  * const isDesktop = useMediaQuery('(min-width: 1024px)')
@@ -26,7 +26,7 @@ export function useMediaQuery(query: string): boolean {
     if (typeof window === 'undefined') return
 
     const mediaQuery = window.matchMedia(query)
-    
+
     // 只在 query 变化时（非首次挂载）才需要更新状态
     // 首次挂载时，useState 的初始化函数已经设置了正确的值
     if (!isInitialMount.current && queryRef.current !== query) {
@@ -35,7 +35,7 @@ export function useMediaQuery(query: string): boolean {
         setMatches(mediaQuery.matches)
       })
     }
-    
+
     queryRef.current = query
     isInitialMount.current = false
 

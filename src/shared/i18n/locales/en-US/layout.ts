@@ -1,6 +1,6 @@
 /**
  * Layout translations - English
- * 
+ *
  * Using nested structure, grouped by functionality for better maintainability
  */
 export default {
@@ -12,7 +12,7 @@ export default {
     settings: 'Settings',
     profile: 'Profile',
   },
-  
+
   // Theme settings
   theme: {
     label: 'Theme',
@@ -20,12 +20,12 @@ export default {
     dark: 'Dark Theme',
     system: 'Follow System',
   },
-  
+
   // Language settings
   language: {
     label: 'Language',
   },
-  
+
   // Sidebar
   sidebar: {
     label: 'Sidebar',

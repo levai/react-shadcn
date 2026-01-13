@@ -33,20 +33,20 @@ function getToken(): string | null {
 
 // 请求拦截器 - 自动添加 Token
 api.interceptors.request.use(
-  (config) => {
+  config => {
     const token = getToken()
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
     }
     return config
   },
-  (error) => Promise.reject(error)
+  error => Promise.reject(error)
 )
 
 // 响应拦截器 - 统一处理
 api.interceptors.response.use(
   (response: AxiosResponse) => response.data,
-  (error) => {
+  error => {
     // 401 未授权，清除状态并跳转登录页
     if (error.response?.status === 401) {
       localStorage.removeItem(AUTH_STORAGE_KEY)
@@ -59,10 +59,7 @@ api.interceptors.response.use(
 /**
  * 统一请求函数
  */
-export async function request<T = unknown>(
-  url: string,
-  config?: AxiosRequestConfig
-): Promise<T> {
+export async function request<T = unknown>(url: string, config?: AxiosRequestConfig): Promise<T> {
   return api.request<T, T>({ url, ...config })
 }
 

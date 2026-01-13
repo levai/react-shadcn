@@ -7,7 +7,7 @@ interface I18nProviderProps {
 
 /**
  * i18n Provider
- * 
+ *
  * 初始化 i18n 配置，确保在应用启动时加载
  */
 export function I18nProvider({ children }: I18nProviderProps) {

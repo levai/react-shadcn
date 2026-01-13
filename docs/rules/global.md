@@ -109,6 +109,7 @@ function UserProfile({ userId }: { userId: string }) {
 ```
 
 **优势：**
+
 - ✅ 自动管理 loading、error 状态
 - ✅ 内置缓存、重试、轮询等功能
 - ✅ 代码更简洁，减少样板代码
@@ -118,16 +119,19 @@ function UserProfile({ userId }: { userId: string }) {
 ### 常用 Hooks
 
 1. **useRequest** - 数据请求（缓存、重试、轮询）
+
    ```typescript
    const { data, loading } = useRequest(() => userService.getUser(id))
    ```
 
 2. **useDebounce** - 防抖处理
+
    ```typescript
    const debouncedValue = useDebounce(value, 300)
    ```
 
 3. **useLocalStorageState** - 同步 localStorage
+
    ```typescript
    const [theme, setTheme] = useLocalStorageState('theme', { defaultValue: 'light' })
    ```
@@ -146,6 +150,7 @@ function UserProfile({ userId }: { userId: string }) {
 如果只有一个 hook，也可以直接放在 feature 根目录。
 
 **导出方式：**
+
 ```typescript
 // features/auth/index.ts
 export { useAuth } from './hooks'
@@ -299,11 +304,11 @@ export type { User, LoginRequest, LoginResponse } from './types'
 
 ### Store 命名规范
 
-| Store 类型     | 命名规范              | 示例                    |
-| -------------- | --------------------- | ----------------------- |
-| 全局应用状态   | `app.store.ts`        | `useAppStore`           |
-| 业务功能状态   | `[feature].store.ts`  | `useAuthStore`          |
-| 导出 Hook      | `use[Name]Store`      | `useAppStore`           |
+| Store 类型   | 命名规范             | 示例           |
+| ------------ | -------------------- | -------------- |
+| 全局应用状态 | `app.store.ts`       | `useAppStore`  |
+| 业务功能状态 | `[feature].store.ts` | `useAuthStore` |
+| 导出 Hook    | `use[Name]Store`     | `useAppStore`  |
 
 ### Store 使用规范
 
@@ -326,10 +331,12 @@ import { useAuthStore } from '@/features/auth/model/auth.store'
 // ✅ 正确 - 用户偏好应该持久化
 export const useAppStore = create<AppState>()(
   persist(
-    (set) => ({ /* ... */ }),
+    set => ({
+      /* ... */
+    }),
     {
       name: 'app-storage',
-      partialize: (state) => ({
+      partialize: state => ({
         preferences: state.preferences,
       }),
     }
@@ -390,7 +397,7 @@ export type { [Feature]Type1, [Feature]Type2 } from './types'
 // features/[feature]/types/index.ts
 /**
  * [Feature] Feature - 类型定义
- * 
+ *
  * 包含该功能相关的所有类型定义
  */
 
@@ -418,10 +425,10 @@ import type { User } from '@/features/auth/types/index'
 
 **类型分类指南：**
 
-| 类型类型 | 存放位置 | 示例 |
-|---------|---------|------|
-| 功能相关类型 | `features/[feature]/types/` | `User`, `LoginRequest` |
-| 通用类型 | `shared/types/` | `ApiResponse`, `PageResult` |
+| 类型类型     | 存放位置                    | 示例                        |
+| ------------ | --------------------------- | --------------------------- |
+| 功能相关类型 | `features/[feature]/types/` | `User`, `LoginRequest`      |
+| 通用类型     | `shared/types/`             | `ApiResponse`, `PageResult` |
 
 **使用示例：**
 
@@ -435,22 +442,90 @@ import { useAuthStore } from '@/features/auth/model/auth.store'
 
 ### 状态分类指南
 
-| 状态类型           | 存放位置                                    | 示例                     |
-| ------------------ | ------------------------------------------- | ------------------------ |
-| 侧边栏折叠状态     | `shared/stores/app.store.ts`                | `sidebarCollapsed`       |
-| 用户认证信息       | `features/auth/model/auth.store.ts`         | `user`, `accessToken`    |
-| 主题模式           | `next-themes` (不在此处)                    | `theme`                  |
-| 业务数据列表       | `features/[feature]/model/[feature].store.ts` | `products`, `orders`     |
-| 全局加载状态       | `shared/stores/app.store.ts`                 | `globalLoading`          |
-| 用户偏好设置       | `shared/stores/app.store.ts`                 | `preferences`            |
+| 状态类型       | 存放位置                                      | 示例                  |
+| -------------- | --------------------------------------------- | --------------------- |
+| 侧边栏折叠状态 | `shared/stores/app.store.ts`                  | `sidebarCollapsed`    |
+| 用户认证信息   | `features/auth/model/auth.store.ts`           | `user`, `accessToken` |
+| 主题模式       | `next-themes` (不在此处)                      | `theme`               |
+| 业务数据列表   | `features/[feature]/model/[feature].store.ts` | `products`, `orders`  |
+| 全局加载状态   | `shared/stores/app.store.ts`                  | `globalLoading`       |
+| 用户偏好设置   | `shared/stores/app.store.ts`                  | `preferences`         |
 
 ### Store 命名规范总结
 
-| Store 类型     | 文件命名                | Hook 命名              | 示例                                    |
-| -------------- | ----------------------- | ---------------------- | --------------------------------------- |
-| 全局应用状态   | `app.store.ts`          | `useAppStore`          | `shared/stores/app.store.ts`            |
-| 业务功能状态   | `[feature].store.ts`    | `use[Feature]Store`    | `features/auth/model/auth.store.ts`     |
-| 存储 Key       | 使用 `getStorageKey()`  | -                      | `getStorageKey('auth')`                 |
+| Store 类型   | 文件命名               | Hook 命名           | 示例                                |
+| ------------ | ---------------------- | ------------------- | ----------------------------------- |
+| 全局应用状态 | `app.store.ts`         | `useAppStore`       | `shared/stores/app.store.ts`        |
+| 业务功能状态 | `[feature].store.ts`   | `use[Feature]Store` | `features/auth/model/auth.store.ts` |
+| 存储 Key     | 使用 `getStorageKey()` | -                   | `getStorageKey('auth')`             |
+
+## 代码质量保障
+
+### ESLint 配置
+
+项目使用 **ESLint** 进行代码质量检查。
+
+**关键配置：**
+
+- **React Refresh 规则** - 允许在组件文件中导出 Hooks 和 variants
+  - 允许导出：`useFormField`、`buttonVariants`、`badgeVariants` 等
+  - 这是为了支持 shadcn/ui 组件的常见模式（组件 + Hook/variants）
+
+**如需添加新的 Hook 或 variants 导出：**
+
+在 `eslint.config.js` 的 `allowExportNames` 数组中添加导出名称。
+
+### Prettier 配置
+
+项目使用 **Prettier** 作为代码格式化工具，确保代码风格统一。
+
+配置文件：`.prettierrc`
+
+**主要配置：**
+
+- `semi: false` - 不使用分号
+- `singleQuote: true` - 使用单引号
+- `tabWidth: 2` - 缩进 2 个空格
+- `printWidth: 100` - 每行最大 100 字符
+- `trailingComma: "es5"` - 尾随逗号
+
+### 使用方式
+
+**格式化所有文件：**
+
+```bash
+npm run format
+# 或
+pnpm format
+```
+
+**检查格式：**
+
+```bash
+npm run format:check
+# 或
+pnpm format:check
+```
+
+### 编辑器集成
+
+**VSCode：**
+
+- 安装 `Prettier - Code formatter` 插件
+- 已配置保存时自动格式化
+- 已配置为默认格式化工具
+
+**Git Hooks：**
+
+- 提交前自动格式化（通过 lint-staged）
+- 确保提交的代码格式统一
+
+### 与 ESLint 集成
+
+项目已配置 `eslint-config-prettier`，确保 Prettier 和 ESLint 不冲突：
+
+- Prettier 负责代码格式化
+- ESLint 负责代码质量检查
 
 ## Git 提交规范
 

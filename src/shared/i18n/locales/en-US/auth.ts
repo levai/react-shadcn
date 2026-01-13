@@ -1,6 +1,6 @@
 /**
  * Authentication translations - English
- * 
+ *
  * Using nested structure, grouped by functionality for better maintainability
  */
 export default {
@@ -8,7 +8,7 @@ export default {
   login: 'Login',
   logout: 'Logout',
   register: 'Register',
-  
+
   // Form fields
   form: {
     username: 'Username',
@@ -17,13 +17,13 @@ export default {
     rememberMe: 'Remember me',
     forgotPassword: 'Forgot password?',
   },
-  
+
   // Login page
   loginPage: {
     title: 'Welcome back',
     subtitle: 'Please enter your account information',
   },
-  
+
   // Messages
   messages: {
     loginSuccess: 'Login successful',

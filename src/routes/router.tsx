@@ -1,10 +1,5 @@
 import { lazy } from 'react'
-import {
-  createBrowserRouter,
-  createHashRouter,
-  Navigate,
-  type RouteObject,
-} from 'react-router-dom'
+import { createBrowserRouter, createHashRouter, Navigate, type RouteObject } from 'react-router-dom'
 import { LazyLoad } from '@/shared/ui'
 import { env } from '@/shared/config'
 import { ROUTES } from '@/shared/constants'
@@ -49,7 +44,7 @@ export const menuRoutes: AppRouteConfig[] = [
     meta: { title: '概览', icon: LayoutDashboard },
     element: (
       <ProtectedRoute>
-        <div className='p-4'>Dashboard Placeholder</div>
+        <div className="p-4">Dashboard Placeholder</div>
       </ProtectedRoute>
     ),
   },
@@ -58,7 +53,7 @@ export const menuRoutes: AppRouteConfig[] = [
     meta: { title: '设置', icon: Settings },
     element: (
       <ProtectedRoute>
-        <div className='p-4'>Settings Placeholder</div>
+        <div className="p-4">Settings Placeholder</div>
       </ProtectedRoute>
     ),
   },

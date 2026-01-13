@@ -1,6 +1,6 @@
 /**
  * Common translations - English
- * 
+ *
  * Using nested structure, grouped by functionality for better maintainability
  */
 export default {
@@ -26,7 +26,7 @@ export default {
     close: 'Close',
     open: 'Open',
   },
-  
+
   // Status
   status: {
     loading: 'Loading...',
@@ -36,28 +36,28 @@ export default {
     info: 'Info',
     noData: 'No data',
   },
-  
+
   // Messages
   messages: {
     operationSuccess: 'Operation successful',
     operationFailed: 'Operation failed',
     confirmDelete: 'Are you sure you want to delete?',
   },
-  
+
   // Time
   time: {
     today: 'Today',
     yesterday: 'Yesterday',
     tomorrow: 'Tomorrow',
   },
-  
+
   // Form validation
   validation: {
     required: 'This field is required',
     invalidEmail: 'Please enter a valid email address',
     invalidPhone: 'Please enter a valid phone number',
   },
-  
+
   // Pagination
   pagination: {
     total: 'Total {{total}} items',

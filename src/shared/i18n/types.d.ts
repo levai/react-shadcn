@@ -1,6 +1,6 @@
 /**
  * i18next TypeScript 类型定义
- * 
+ *
  * 提供类型安全的翻译键，支持自动补全和类型检查
  */
 import 'react-i18next'

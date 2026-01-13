@@ -1,9 +1,9 @@
 /**
  * Home page translations - English
- * 
+ *
  * Namespace: home (feature module)
  * Usage: useTranslation('home') then t('homePage.welcome.title')
- * 
+ *
  * Industry standard: Group by feature modules, page content uses [pageName]Page keys
  */
 export default {
@@ -11,12 +11,14 @@ export default {
   homePage: {
     welcome: {
       title: 'Welcome to Frontend Template',
-      description: 'An enterprise-grade frontend template based on FSD architecture, optimized for AI programming tools.',
+      description:
+        'An enterprise-grade frontend template based on FSD architecture, optimized for AI programming tools.',
     },
     features: {
       fsdArchitecture: {
         title: 'FSD Architecture',
-        description: 'Organize code by feature modules with clear boundaries, making it easier for AI to understand',
+        description:
+          'Organize code by feature modules with clear boundaries, making it easier for AI to understand',
       },
       aiFriendly: {
         title: 'AI Friendly',

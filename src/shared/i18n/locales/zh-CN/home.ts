@@ -1,9 +1,9 @@
 /**
  * 首页相关翻译 - 简体中文
- * 
+ *
  * 命名空间：home（功能模块）
  * 使用方式：useTranslation('home') 然后 t('homePage.welcome.title')
- * 
+ *
  * 符合业界主流：按功能模块分组，页面内容使用 [pageName]Page 键
  */
 export default {

@@ -13,7 +13,7 @@ import i18n from '@/shared/i18n'
 
 /**
  * 语言切换组件
- * 
+ *
  * 支持的语言：
  * - zh-CN: 简体中文
  * - en-US: 英语
@@ -41,28 +41,24 @@ export function LanguageToggle() {
     { code: 'en-US', label: 'English', flag: '🇺🇸' },
   ]
 
-  const currentLang = languages.find(lang => lang.code === language) || languages[0]
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant='ghost' size='icon' className='relative h-9 w-9'>
-          <Languages className='h-5 w-5' />
-          <span className='sr-only'>{t('language.label')}</span>
+        <Button variant="ghost" size="icon" className="relative h-9 w-9">
+          <Languages className="h-5 w-5" />
+          <span className="sr-only">{t('language.label')}</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align='end'>
+      <DropdownMenuContent align="end">
         {languages.map(lang => (
           <DropdownMenuItem
             key={lang.code}
             onClick={() => handleLanguageChange(lang.code)}
             className={language === lang.code ? 'bg-accent' : ''}
           >
-            <span className='mr-2'>{lang.flag}</span>
+            <span className="mr-2">{lang.flag}</span>
             <span>{lang.label}</span>
-            {language === lang.code && (
-              <span className='ml-auto text-xs'>✓</span>
-            )}
+            {language === lang.code && <span className="ml-auto text-xs">✓</span>}
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>

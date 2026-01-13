@@ -25,25 +25,12 @@ export {
   DropdownMenuSubTrigger,
   DropdownMenuRadioGroup,
 } from './dropdown-menu'
-export {
-  Card,
-  CardHeader,
-  CardFooter,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from './card'
+export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent } from './card'
 export { Avatar, AvatarImage, AvatarFallback } from './avatar'
 export { Badge, badgeVariants } from './badge'
 export { Separator } from './separator'
 export { Skeleton } from './skeleton'
-export {
-  Tooltip,
-  TooltipTrigger,
-  TooltipContent,
-  TooltipProvider,
-  TooltipArrow,
-} from './tooltip'
+export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider, TooltipArrow } from './tooltip'
 export {
   Dialog,
   DialogPortal,

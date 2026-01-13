@@ -26,7 +26,7 @@ interface AuthState {
 
 export const useAuthStore = create<AuthState>()(
   persist(
-    (set) => ({
+    set => ({
       user: null,
       accessToken: null,
       isAuthenticated: false,
@@ -50,17 +50,17 @@ export const useAuthStore = create<AuthState>()(
         })
       },
 
-      setLoading: (isLoading) => set({ isLoading }),
+      setLoading: isLoading => set({ isLoading }),
     }),
     {
       name: AUTH_STORAGE_KEY,
-      partialize: (state) => ({
+      partialize: state => ({
         user: state.user,
         accessToken: state.accessToken,
         isAuthenticated: state.isAuthenticated,
       }),
       // 当 store 从 localStorage 恢复后，设置 isLoading 为 false
-      onRehydrateStorage: () => (state) => {
+      onRehydrateStorage: () => state => {
         if (state) {
           state.setLoading(false)
         }

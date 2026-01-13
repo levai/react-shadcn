@@ -5,5 +5,5 @@ import { Toaster } from 'sonner'
  * 提供全局 Toast 通知功能
  */
 export function ToasterProvider() {
-  return <Toaster position='top-right' richColors />
+  return <Toaster position="top-right" richColors />
 }

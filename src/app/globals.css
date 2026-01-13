@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @plugin "tailwindcss-animate";
 
@@ -10,38 +10,38 @@
   /* 基础色 */
   --background: 0 0% 100%; /* 白色背景 */
   --foreground: 220 15% 20%; /* 深色文本 */
-  
+
   /* 卡片和弹出层 */
   --card: 0 0% 98%; /* 浅灰卡片 */
   --card-foreground: 220 15% 20%; /* 深色文本 */
   --popover: 0 0% 100%; /* 白色弹出层 */
   --popover-foreground: 220 15% 20%; /* 深色文本 */
-  
+
   /* 主色 - 保持与深色模式一致 */
   --primary: 165 95% 40%; /* #05C79A */
   --primary-foreground: 0 0% 100%; /* 白色 */
-  
+
   /* 次要色 */
   --secondary: 165 95% 95%; /* 浅青绿色背景 */
   --secondary-foreground: 165 95% 25%; /* #037d61 */
-  
+
   /* 静音色 */
   --muted: 220 10% 96%; /* 浅灰 */
   --muted-foreground: 220 10% 45%; /* 中灰色文本 */
-  
+
   /* 强调色 */
   --accent: 165 95% 95%; /* 浅青绿色背景 */
   --accent-foreground: 165 95% 25%; /* #037d61 */
-  
+
   /* 危险色 */
   --destructive: 0 100% 64%; /* #FF4747 */
   --destructive-foreground: 0 0% 100%; /* 白色 */
-  
+
   /* 边框和输入 */
   --border: 220 15% 85%; /* 浅色边框 */
   --input: 220 15% 85%; /* 浅色输入框边框 */
   --ring: 165 95% 40%; /* #05C79A */
-  
+
   /* 圆角 */
   --radius: 0.5rem;
 }
@@ -50,33 +50,33 @@
   /* 战术主题色 - 基础色 */
   --background: 210 30% 7%; /* #0A0E13 */
   --foreground: 220 10% 91%; /* #E5E7EB */
-  
+
   /* 卡片和弹出层 */
   --card: 220 25% 10%; /* #111827 */
   --card-foreground: 220 10% 91%; /* #E5E7EB */
   --popover: 220 25% 10%; /* #111827 */
   --popover-foreground: 220 10% 91%; /* #E5E7EB */
-  
+
   /* 主色 */
   --primary: 165 95% 40%; /* #05C79A */
   --primary-foreground: 0 0% 100%; /* #FFFFFF */
-  
+
   /* 次要色 */
   --secondary: 165 95% 25%; /* #037d61 */
   --secondary-foreground: 0 0% 100%; /* #FFFFFF */
-  
+
   /* 静音色 */
   --muted: 220 25% 10%; /* #111827 */
   --muted-foreground: 210 10% 60%; /* #8899A6 */
-  
+
   /* 强调色 */
   --accent: 165 95% 25%; /* #037d61 */
   --accent-foreground: 0 0% 100%; /* #FFFFFF */
-  
+
   /* 危险色 */
   --destructive: 0 100% 64%; /* #FF4747 */
   --destructive-foreground: 0 0% 100%; /* #FFFFFF */
-  
+
   /* 边框和输入 */
   --border: 200 25% 22%; /* #2A3B47 */
   --input: 200 25% 22%; /* #2A3B47 */
@@ -139,5 +139,11 @@
 body {
   background-color: var(--color-background);
   color: var(--color-foreground);
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
 }

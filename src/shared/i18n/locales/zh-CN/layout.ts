@@ -1,6 +1,6 @@
 /**
  * 布局相关翻译 - 简体中文
- * 
+ *
  * 使用嵌套结构，按功能分组，更易维护
  */
 export default {
@@ -12,7 +12,7 @@ export default {
     settings: '设置',
     profile: '个人资料',
   },
-  
+
   // 主题设置
   theme: {
     label: '主题',
@@ -20,12 +20,12 @@ export default {
     dark: '深色主题',
     system: '跟随系统',
   },
-  
+
   // 语言设置
   language: {
     label: '语言',
   },
-  
+
   // 侧边栏
   sidebar: {
     label: '侧边栏',

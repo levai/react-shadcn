@@ -17,6 +17,8 @@
 - ahooks (Hooks 库)
 - sonner (Toast 通知)
 - lucide-react (图标库)
+- Prettier (代码格式化)
+- ESLint (代码检查)
 
 ## 目录结构 (FSD)
 
@@ -80,11 +82,12 @@ import { useAuthStore } from '@/features/auth/model/auth.store'
 ### 组件模式
 
 **页面组件：**
+
 ```typescript
 // 箭头函数 + 默认导出
 const LoginPage = () => {
   const { t } = useTranslation('auth')
-  
+
   return (
     <div>
       <h1>{t('loginPage.title')}</h1>
@@ -95,11 +98,12 @@ export default LoginPage
 ```
 
 **功能组件：**
+
 ```typescript
 // 函数声明 + 命名导出
 export function LoginForm({ onSubmit }: LoginFormProps) {
   const { t } = useTranslation('auth')
-  
+
   return (
     <form onSubmit={onSubmit}>
       <label>{t('form.email.label')}</label>
@@ -111,18 +115,19 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
 
 ### 命名规范
 
-| 类型 | 规范 | 示例 |
-|------|------|------|
-| 组件文件 | PascalCase | `LoginForm.tsx` |
-| 页面目录 | PascalCase + Page | `LoginPage/LoginPage.tsx` |
-| Hooks | camelCase + use | `useAuthStore` |
-| 服务 | camelCase + Service | `authService` |
-| 类型 | PascalCase | `LoginRequest` |
-| 常量 | UPPER_SNAKE_CASE | `ROUTES` |
+| 类型     | 规范                | 示例                      |
+| -------- | ------------------- | ------------------------- |
+| 组件文件 | PascalCase          | `LoginForm.tsx`           |
+| 页面目录 | PascalCase + Page   | `LoginPage/LoginPage.tsx` |
+| Hooks    | camelCase + use     | `useAuthStore`            |
+| 服务     | camelCase + Service | `authService`             |
+| 类型     | PascalCase          | `LoginRequest`            |
+| 常量     | UPPER_SNAKE_CASE    | `ROUTES`                  |
 
 ### 状态管理 (Zustand)
 
 **全局应用状态：**
+
 ```typescript
 // 位置：src/shared/stores/app.store.ts
 import { useAppStore } from '@/shared/stores'
@@ -131,6 +136,7 @@ import { useAppStore } from '@/shared/stores'
 ```
 
 **功能状态：**
+
 ```typescript
 // 位置：src/features/[feature]/model/[feature].store.ts
 import { create } from 'zustand'
@@ -143,13 +149,13 @@ interface AuthState {
 
 export const useAuthStore = create<AuthState>()(
   persist(
-    (set) => ({
+    set => ({
       user: null,
-      setUser: (user) => set({ user }),
+      setUser: user => set({ user }),
     }),
     {
       name: 'auth-storage',
-      partialize: (state) => ({ user: state.user }),
+      partialize: state => ({ user: state.user }),
     }
   )
 )
@@ -212,6 +218,7 @@ function UserProfile({ userId }: { userId: string }) {
 ```
 
 **优势：**
+
 - ✅ 自动管理 loading、error 状态
 - ✅ 内置缓存、重试、轮询等功能
 - ✅ 代码更简洁，减少样板代码
@@ -234,6 +241,7 @@ navigate('/')
 ```
 
 **路由保护：**
+
 ```typescript
 import { ProtectedRoute } from '@/features/auth'
 
@@ -248,6 +256,7 @@ import { ProtectedRoute } from '@/features/auth'
 ```
 
 **懒加载：**
+
 ```typescript
 import { lazy, Suspense } from 'react'
 import { PageLoader } from '@/shared/ui'
@@ -264,18 +273,20 @@ const DashboardPage = lazy(() => import('@/pages/DashboardPage'))
 ### 国际化 (i18n)
 
 **基础用法：**
+
 ```typescript
 import { useTranslation } from '@/shared/i18n'
 
 function Component() {
   const { t } = useTranslation('common')
-  
+
   // 使用嵌套结构的键（使用点号分隔）
   return <div>{t('actions.confirm')}</div>
 }
 ```
 
 **多个命名空间：**
+
 ```typescript
 const { t } = useTranslation(['layout', 'auth'])
 
@@ -287,6 +298,7 @@ t('auth:loginPage.title')
 ```
 
 **关键规则：**
+
 - 始终使用 i18n - 禁止硬编码用户可见文本
 - 使用嵌套键：`t('actions.confirm')` 而不是 `t('confirm')`
 - 页面内容模式：`t('homePage.welcome.title')`
@@ -296,6 +308,7 @@ t('auth:loginPage.title')
 ### 样式
 
 **使用 `cn()` 工具函数：**
+
 ```typescript
 import { cn } from '@/shared/lib'
 
@@ -303,6 +316,7 @@ import { cn } from '@/shared/lib'
 ```
 
 **使用 CSS 变量，禁止硬编码颜色：**
+
 ```typescript
 // ✅ 正确
 className="bg-primary text-primary-foreground"
@@ -317,6 +331,7 @@ style={{ color: '#05C79A' }}
 ### 图标和通知
 
 **统一使用：**
+
 - 图标：`lucide-react`
 - Toast：`sonner`
 
@@ -338,6 +353,7 @@ toast.error('操作失败')
 ```
 
 **类型：**
+
 - `feat`: 新功能
 - `fix`: Bug 修复
 - `docs`: 文档
@@ -350,6 +366,7 @@ toast.error('操作失败')
 - `chore`: 其他变更
 
 **示例：**
+
 ```
 feat: add user login feature
 fix: fix sidebar collapse issue

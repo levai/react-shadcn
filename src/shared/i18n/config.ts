@@ -8,7 +8,7 @@ import enUS from './locales/en-US'
 
 /**
  * i18n 配置
- * 
+ *
  * 支持的语言：
  * - zh-CN: 简体中文（默认）
  * - en-US: 英语

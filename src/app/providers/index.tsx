@@ -11,7 +11,7 @@ interface ProvidersProps {
 /**
  * 统一 Providers 组件
  * 按顺序组合所有全局 Provider
- * 
+ *
  * Provider 顺序说明：
  * 1. ErrorBoundaryProvider - 最外层，捕获所有错误
  * 2. I18nProvider - 国际化提供，需要在 ThemeProvider 之前
