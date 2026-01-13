@@ -44,6 +44,8 @@ pnpm install
 yarn install
 ```
 
+**注意：** 项目使用 **ahooks** 作为 Hooks 库，安装依赖时会自动安装。如果遇到问题，请查看 [集成说明](./INTEGRATION.md)。
+
 **注意：** 首次安装依赖后，Husky 会自动初始化。如果遇到问题，可以手动运行：
 
 ```bash
@@ -92,6 +94,7 @@ src/
 └── shared/              # 共享层
     ├── api/             # HTTP 客户端
     ├── config/          # 环境变量配置
+    ├── hooks/           # 共享 Hooks (useDebounce, useMediaQuery 等)
     ├── ui/              # UI 组件库 (Shadcn + Custom)
     ├── lib/             # 工具函数
     └── constants/       # 常量
@@ -126,6 +129,8 @@ src/
 - **[UI 组件规范](./docs/rules/ui.md)** - Toast、主题、图标、表单、样式、**侧边栏开发规范**
 - **[路由规范](./docs/rules/routing.md)** - 路由配置、路由保护、懒加载
 - **[API 规范](./docs/rules/api.md)** - HTTP 客户端、错误处理、请求拦截
+- **[Hooks 规范](./docs/rules/hooks.md)** - Hooks 库推荐、使用规范、集成方案
+- **[Hooks 库对比](./docs/rules/hooks-comparison.md)** - 主流 Hooks 库详细对比分析
 
 ### 侧边栏开发规范（重要）
 

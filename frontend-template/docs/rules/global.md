@@ -38,6 +38,7 @@ src/
 ├── shared/           # 共享层：跨功能复用的代码
 │   ├── ui/           # 基础 UI 组件
 │   ├── lib/          # 工具函数 (cn 等)
+│   ├── hooks/        # 共享 Hooks (useDebounce, useMediaQuery 等)
 │   ├── api/          # HTTP 客户端
 │   ├── types/        # 通用类型定义
 │   ├── config/       # 应用配置
@@ -62,14 +63,65 @@ import { LoginForm } from '../../features/auth'
 
 1. **从 feature 的 index.ts 导入**，不要导入内部文件
 2. **使用具名导入**，避免 `import *`
+3. **共享 Hooks 从 `@/shared/hooks` 导入**
 
 ```typescript
-// ✅ 正确
+// ✅ 正确 - Feature 导入
 import { LoginForm, useAuthStore, authService } from '@/features/auth'
 
-// ❌ 错误
+// ✅ 正确 - 共享 Hooks 导入
+import { useDebounce, useMediaQuery, useLocalStorage } from '@/shared/hooks'
+
+// ❌ 错误 - 不要直接导入内部文件
 import { LoginForm } from '@/features/auth/ui/LoginForm'
 import { useAuthStore } from '@/features/auth/model/auth.store'
+import { useDebounce } from '@/shared/hooks/useDebounce'
+```
+
+## Hooks 使用规范
+
+### 共享 Hooks
+
+位置：`src/shared/hooks/`
+
+**使用的库：** ahooks（阿里开源，中文文档完善）
+
+**常用 Hooks：**
+
+1. **useRequest** - 数据请求（缓存、重试、轮询）
+   ```typescript
+   const { data, loading } = useRequest(() => fetchUser(id))
+   ```
+
+2. **useDebounce** - 防抖处理
+   ```typescript
+   const debouncedValue = useDebounce(value, 300)
+   ```
+
+3. **useLocalStorage** - 同步 localStorage
+   ```typescript
+   const [theme, setTheme] = useLocalStorage('theme', 'light')
+   ```
+
+4. **useMediaQuery** - 监听媒体查询变化（自定义）
+   ```typescript
+   const isDesktop = useMediaQuery('(min-width: 1024px)')
+   ```
+
+**更多 hooks 请查看：** [ahooks 官方文档](https://ahooks.js.org/zh-CN)
+
+### 功能特定 Hooks
+
+位置：`src/features/[feature]/hooks/`（可选）
+
+如果只有一个 hook，也可以直接放在 feature 根目录。
+
+**导出方式：**
+```typescript
+// features/auth/index.ts
+export { useAuth } from './hooks'
+// 或
+export { useAuth } from './useAuth'
 ```
 
 ## 命名规范
