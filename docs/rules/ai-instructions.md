@@ -384,9 +384,9 @@ docs: update development guidelines
 
 ### 工作流文档
 
-- **[添加新页面](../../.agent/workflows/add-page.md)** - 页面组件创建、路由配置
-- **[添加新功能模块](../../.agent/workflows/add-feature.md)** - Feature 目录结构
-- **[添加新 Hook](../../.agent/workflows/add-hook.md)** - Hooks 创建规范
-- **[添加新 Provider](../../.agent/workflows/add-provider.md)** - Provider 组织
-- **[国际化工作流](../../.agent/workflows/add-i18n.md)** - 国际化添加流程
-- **[useRequest 最佳实践](../../.agent/workflows/use-request-best-practices.md)** - useRequest 使用规范
+- **[添加新页面](../workflows/add-page.md)** - 页面组件创建、路由配置
+- **[添加新功能模块](../workflows/add-feature.md)** - Feature 目录结构
+- **[添加新 Hook](../workflows/add-hook.md)** - Hooks 创建规范
+- **[添加新 Provider](../workflows/add-provider.md)** - Provider 组织
+- **[国际化工作流](../workflows/add-i18n.md)** - 国际化添加流程
+- **[useRequest 最佳实践](../workflows/use-request-best-practices.md)** - useRequest 使用规范

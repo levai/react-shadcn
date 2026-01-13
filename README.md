@@ -22,7 +22,7 @@
   - 包含 `docs/rules/ai-instructions.md` 统一 AI 助手规范（统一维护源）
   - 包含 `.cursor/rules` 开发规范（Cursor 专用）
   - 包含 `.github/copilot-instructions.md`（GitHub Copilot 专用）
-  - 包含 `.agent/workflows` 自动化工作流
+  - 包含 `docs/workflows` 自动化工作流
   - 代码结构清晰，上下文明确
 - **开箱即用**:
   - 完整的认证流程（Login, Protected Routes, Token Refresh）
