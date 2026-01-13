@@ -86,11 +86,38 @@ import { useDebounce } from '@/shared/hooks/useDebounce'
 
 **使用的库：** ahooks（阿里开源，中文文档完善）
 
-**常用 Hooks：**
+### ⭐ 数据请求规范
+
+**在 React 组件中，统一使用 `useRequest` 进行数据请求。**
+
+```typescript
+import { useRequest } from '@/shared/hooks'
+import { userService } from '@/features/user'
+
+function UserProfile({ userId }: { userId: string }) {
+  const { data: user, loading, error } = useRequest(
+    () => userService.getUser(userId),
+    { refreshDeps: [userId] }
+  )
+
+  if (loading) return <div>加载中...</div>
+  if (error) return <div>加载失败</div>
+  return <div>{user.name}</div>
+}
+```
+
+**优势：**
+- ✅ 自动管理 loading、error 状态
+- ✅ 内置缓存、重试、轮询等功能
+- ✅ 代码更简洁，减少样板代码
+
+**详细指南：** [useRequest 使用指南](./useRequest-guide.md)
+
+### 常用 Hooks
 
 1. **useRequest** - 数据请求（缓存、重试、轮询）
    ```typescript
-   const { data, loading } = useRequest(() => fetchUser(id))
+   const { data, loading } = useRequest(() => userService.getUser(id))
    ```
 
 2. **useDebounce** - 防抖处理
