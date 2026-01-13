@@ -1,0 +1,20 @@
+---
+alwaysApply: true
+source: ../docs/rules
+---
+
+> 📖 **文档来源**: 此规则文件引用自 `docs/rules/` 目录
+> 
+> ⚠️ **重要**: 请直接编辑 `docs/rules/` 目录中的文件。
+
+---
+
+所有开发流程请严格遵守 `docs/rules/` 目录中的 `global.md`、`api.md`、`ui.md`、`routing.md`、`git.md` 等文件，不得自行扩展或删减规则；必须以这些规范文档为唯一约束来源。
+
+## 规范文档列表
+
+- **[全局开发规范](../docs/rules/global.md)** - 技术栈、目录结构、命名规范、主题色规范、状态管理规范
+- **[UI 组件规范](../docs/rules/ui.md)** - Toast、主题、图标、表单、样式、侧边栏开发规范
+- **[路由规范](../docs/rules/routing.md)** - 路由配置、路由保护、懒加载
+- **[API 规范](../docs/rules/api.md)** - HTTP 客户端、错误处理、请求拦截
+- **[Git 提交规范](../docs/rules/git.md)** - Commit message 格式、提交类型、AI 生成指南

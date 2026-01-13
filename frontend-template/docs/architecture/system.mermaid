@@ -1,0 +1,44 @@
+graph TB
+    subgraph App["应用层 (app/)"]
+        Main["main.tsx"]
+        AppComponent["App.tsx"]
+        Providers["Providers"]
+    end
+    
+    subgraph Features["功能层 (features/)"]
+        subgraph Auth["auth/"]
+            AuthUI["ui/"]
+            AuthAPI["api/"]
+            AuthModel["model/"]
+        end
+    end
+    
+    subgraph Pages["页面层 (pages/)"]
+        HomePage["HomePage"]
+        LoginPage["LoginPage"]
+    end
+    
+    subgraph Shared["共享层 (shared/)"]
+        SharedUI["ui/"]
+        SharedLib["lib/"]
+        SharedAPI["api/"]
+        SharedTypes["types/"]
+        SharedConfig["config/"]
+        SharedConstants["constants/"]
+    end
+    
+    subgraph Routes["路由层 (routes/)"]
+        AppRouter["AppRouter"]
+    end
+    
+    Main --> AppComponent
+    AppComponent --> Providers
+    Providers --> AppRouter
+    
+    AppRouter --> Pages
+    Pages --> Features
+    Features --> Shared
+    
+    AuthUI --> AuthModel
+    AuthUI --> AuthAPI
+    AuthAPI --> SharedAPI
