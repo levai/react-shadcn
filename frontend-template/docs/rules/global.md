@@ -17,7 +17,13 @@ src/
 ├── app/              # 应用层：入口、Provider、全局配置
 │   ├── App.tsx       # 根组件
 │   ├── main.tsx      # 入口文件
-│   └── globals.css   # 全局样式
+│   ├── globals.css   # 全局样式
+│   ├── providers/    # 全局 Provider 组件
+│   │   ├── ErrorBoundaryProvider.tsx
+│   │   ├── ThemeProvider.tsx
+│   │   ├── ToasterProvider.tsx
+│   │   └── index.tsx  # 统一导出和组合
+│   └── layouts/       # 全局布局组件
 ├── features/         # 功能层：按业务功能拆分
 │   └── [feature]/
 │       ├── ui/       # 该功能的 UI 组件
