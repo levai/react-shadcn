@@ -2,8 +2,6 @@
 
 这是一个专为 AI 辅助编程（Cursor, Copilot）优化的**企业级前端模板**，**完全适合大中型项目开发**。采用简化版 FSD (Feature-Sliced Design) 架构，集成了现代技术栈，旨在提供极佳的 DX（开发体验）和 AI 理解能力。
 
-> 📊 **项目适用性评估**：详见 [项目适用性评估文档](./docs/architecture/project-assessment.md)
-
 ## 🌟 核心特性
 
 - **架构**: 简化版 FSD (Feature-Sliced Design)
@@ -21,7 +19,9 @@
   - Axios (网络请求)
   - react-i18next (国际化)
 - **AI 友好**:
-  - 包含 `.cursor/rules` 开发规范
+  - 包含 `docs/rules/ai-instructions.md` 统一 AI 助手规范（统一维护源）
+  - 包含 `.cursor/rules` 开发规范（Cursor 专用）
+  - 包含 `.github/copilot-instructions.md`（GitHub Copilot 专用）
   - 包含 `.agent/workflows` 自动化工作流
   - 代码结构清晰，上下文明确
 - **开箱即用**:
@@ -48,7 +48,7 @@ pnpm install
 yarn install
 ```
 
-**注意：** 项目使用 **ahooks** 作为 Hooks 库，安装依赖时会自动安装。如果遇到问题，请查看 [集成说明](./INTEGRATION.md)。
+**注意：** 项目使用 **ahooks** 作为 Hooks 库，安装依赖时会自动安装。详细使用规范请查看 [Hooks 规范](./docs/rules/hooks.md)。
 
 **注意：** 首次安装依赖后，Husky 会自动初始化。如果遇到问题，可以手动运行：
 

@@ -1,38 +1,167 @@
 ---
 alwaysApply: true
-source: ../docs/rules
+description: 项目核心开发规范和架构指导原则
 ---
 
-> 📖 **文档来源**: 此规则文件引用自 `docs/rules/` 目录和`.agent/workflows/`目录
->
-> ⚠️ **重要**: 请直接编辑 `docs/rules/` 和`.agent/workflows/`目录中的文件。
+# 项目开发规范
 
----
+> 📖 **详细规范**: 完整规范请查看 [`docs/rules/ai-instructions.md`](../../docs/rules/ai-instructions.md)
 
-所有开发流程请严格遵守 `docs/rules/` 目录中的 `global.md`、`api.md`、`ui.md`、`routing.md`、`git.md`、`hooks.md`、`i18n.md` 等文件，不得自行扩展或删减规则；必须以这些规范文档为唯一约束来源。
+本项目使用 **Feature-Sliced Design (FSD)** 架构，专为 AI 辅助编程优化。
 
-页面模板、功能模块、Hooks、Provider、国际化等开发工作流请严格遵守 `.agent/workflows/` 目录中的 `add-page.md`、`add-feature.md`、`add-hook.md`、`add-provider.md`、`add-i18n.md`、`use-request-best-practices.md` 等工作流文档，确保代码结构和实现方式符合项目规范。
+## 技术栈
 
-## 规范文档列表
+- React 19 + TypeScript 5.9
+- Vite 7 + Tailwind CSS 4
+- Zustand (状态管理)
+- React Router 7 (路由)
+- Axios (HTTP 客户端)
+- react-i18next (国际化)
+- ahooks (Hooks 库)
+- sonner (Toast 通知)
+- lucide-react (图标库)
 
-### 核心规范文档
+## 目录结构
 
-- **[全局开发规范](../docs/rules/global.md)** - 技术栈、目录结构、命名规范、主题色规范、状态管理规范
-- **[UI 组件规范](../docs/rules/ui.md)** - Toast、主题、图标、表单、样式、侧边栏开发规范
-- **[路由规范](../docs/rules/routing.md)** - 路由配置、路由保护、懒加载
-- **[API 规范](../docs/rules/api.md)** - HTTP 客户端、错误处理、请求拦截、useRequest 使用规范
-- **[Hooks 规范](../docs/rules/hooks.md)** - Hooks 库（ahooks）使用规范、常用 Hooks 列表
-- **[国际化规范](../docs/rules/i18n.md)** - react-i18next 使用规范、语言资源管理、语言切换
-- **[Git 提交规范](../docs/rules/git.md)** - Commit message 格式、提交类型、AI 生成指南
-- **[useRequest 使用指南](../docs/rules/useRequest-guide.md)** - useRequest 与 Axios 拦截器配合使用详细指南
+```
+src/
+├── app/              # 应用层：入口、Provider、布局
+├── features/         # 功能层：业务功能模块
+│   └── [feature]/
+│       ├── ui/       # UI 组件
+│       ├── api/      # API 服务
+│       ├── model/    # 状态管理 (Zustand)
+│       └── index.ts  # 统一导出
+├── pages/            # 页面层：路由入口
+├── shared/           # 共享层：工具、类型、配置
+└── routes/           # 路由配置
+```
 
-### 工作流文档
+## 核心规则
 
-开发工作流请参考 `.agent/workflows/` 目录中的工作流文档：
+### 路径别名
 
-- **[添加新页面](../../.agent/workflows/add-page.md)** - 页面组件创建、路由配置、懒加载
-- **[添加新功能模块](../../.agent/workflows/add-feature.md)** - Feature 目录结构、Store、API、UI 组件
-- **[添加新 Hook](../../.agent/workflows/add-hook.md)** - 共享 Hooks 和功能特定 Hooks 的创建规范
-- **[添加新 Provider](../../.agent/workflows/add-provider.md)** - Provider 组件组织、嵌套顺序
-- **[国际化工作流](../../.agent/workflows/add-i18n.md)** - 添加新语言、新命名空间、在组件中使用
-- **[useRequest 最佳实践](../../.agent/workflows/use-request-best-practices.md)** - useRequest 统一使用规范、迁移指南
+**必须使用 `@/` 前缀，禁止相对路径：**
+
+```typescript
+// ✅ 正确
+import { LoginForm } from '@/features/auth'
+import { cn } from '@/shared/lib'
+
+// ❌ 错误
+import { LoginForm } from '../../features/auth'
+```
+
+### 导入规则
+
+1. **从 feature 的 `index.ts` 导入**，不要导入内部文件
+2. **使用具名导入**，避免 `import *`
+3. **共享 Hooks 从 `@/shared/hooks` 导入**
+
+```typescript
+// ✅ 正确
+import { LoginForm, useAuthStore, authService } from '@/features/auth'
+import { useRequest } from '@/shared/hooks'
+
+// ❌ 错误
+import { LoginForm } from '@/features/auth/ui/LoginForm'
+```
+
+### 组件模式
+
+**页面组件：**
+```typescript
+const LoginPage = () => {
+  return <div>...</div>
+}
+export default LoginPage
+```
+
+**功能组件：**
+```typescript
+export function LoginForm({ onSubmit }: Props) {
+  return <form>...</form>
+}
+```
+
+### 数据请求
+
+**统一使用 `useRequest` Hook：**
+
+```typescript
+import { useRequest } from '@/shared/hooks'
+
+const { data, loading, error } = useRequest(
+  () => userService.getUser(userId),
+  { refreshDeps: [userId] }
+)
+```
+
+### 国际化
+
+**必须使用 i18n，禁止硬编码文本：**
+
+```typescript
+import { useTranslation } from '@/shared/i18n'
+
+const { t } = useTranslation('common')
+return <div>{t('actions.confirm')}</div>
+```
+
+### 路由
+
+**使用 ROUTES 常量，禁止硬编码路径：**
+
+```typescript
+import { ROUTES } from '@/shared/constants'
+navigate(ROUTES.HOME)  // ✅ 正确
+navigate('/')           // ❌ 错误
+```
+
+### 样式
+
+**使用 `cn()` 工具函数：**
+
+```typescript
+import { cn } from '@/shared/lib'
+<div className={cn('base', isActive && 'active')} />
+```
+
+**使用 CSS 变量，禁止硬编码颜色：**
+
+```typescript
+className="bg-primary text-primary-foreground"  // ✅ 正确
+className="bg-[#05C79A]"                        // ❌ 错误
+```
+
+### 图标和通知
+
+**统一使用：**
+- 图标：`lucide-react`
+- Toast：`sonner`
+
+```typescript
+import { Home } from 'lucide-react'
+import { toast } from 'sonner'
+
+<Home className="h-5 w-5" />
+toast.success('操作成功')
+```
+
+## 关键规则总结
+
+1. ✅ 使用 `@/` 路径别名
+2. ✅ 从 feature 的 `index.ts` 导入
+3. ✅ 使用 `cn()` 处理类名
+4. ✅ 使用 TypeScript 类型
+5. ✅ 始终使用 i18n
+6. ✅ 使用 `useRequest` 进行数据请求
+7. ✅ 使用 ROUTES 常量
+8. ✅ 使用 toast (sonner)
+9. ✅ 使用 lucide-react 图标
+10. ✅ 遵循 FSD 架构
+
+## 详细规范
+
+**统一规范源文件（包含所有文档链接）：**
+- **[AI 编程助手统一规范](../../docs/rules/ai-instructions.md)** - 所有详细规则、代码示例和完整文档列表（**唯一维护源**）
