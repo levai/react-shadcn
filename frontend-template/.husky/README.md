@@ -4,16 +4,13 @@
 
 ## 安装
 
-首次克隆项目后，运行：
+Hooks 文件已配置完成，无需额外操作。
 
-```bash
-npm install
-npm run prepare
-```
-
-这会安装并初始化 Husky。
-
-**注意：** Husky v9 已废弃 `husky add` 命令，hook 文件需要手动创建。本项目已按照官方标准格式创建了所有必要的 hook 文件。
+**注意：** 
+- Husky v9 已废弃 `husky install` 命令
+- Husky v9 已废弃 `husky add` 命令，hook 文件需要手动创建
+- 本项目已按照官方标准格式创建了所有必要的 hook 文件
+- 如果需要在新的环境中设置 hooks，可以手动运行 `npx husky`（需要确保在 git 仓库根目录）
 
 ## Hooks 说明
 

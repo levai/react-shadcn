@@ -1,6 +1,8 @@
 # AI-Friendly Frontend Template
 
-这是一个专为 AI 辅助编程（Cursor, Copilot）优化的企业级前端模板。采用简化版 FSD (Feature-Sliced Design) 架构，集成了现代技术栈，旨在提供极佳的 DX（开发体验）和 AI 理解能力。
+这是一个专为 AI 辅助编程（Cursor, Copilot）优化的**企业级前端模板**，**完全适合大中型项目开发**。采用简化版 FSD (Feature-Sliced Design) 架构，集成了现代技术栈，旨在提供极佳的 DX（开发体验）和 AI 理解能力。
+
+> 📊 **项目适用性评估**：详见 [项目适用性评估文档](./docs/architecture/project-assessment.md)
 
 ## 🌟 核心特性
 
@@ -17,6 +19,7 @@
   - Zustand (状态管理)
   - React Router v6 (数据路由)
   - Axios (网络请求)
+  - react-i18next (国际化)
 - **AI 友好**:
   - 包含 `.cursor/rules` 开发规范
   - 包含 `.agent/workflows` 自动化工作流
@@ -25,6 +28,7 @@
   - 完整的认证流程（Login, Protected Routes, Token Refresh）
   - 动态路由与侧边栏菜单生成
   - 深色/浅色主题切换
+  - 国际化支持（中文/英文，可扩展）
   - 统一的 HTTP 客户端与错误处理
 
 ## 🚀 快速开始
@@ -93,8 +97,9 @@ src/
 │   └── AppRouter.tsx    # 路由 Provider
 └── shared/              # 共享层
     ├── api/             # HTTP 客户端
-    ├── config/          # 环境变量配置
+    ├── config/           # 环境变量配置
     ├── hooks/           # 共享 Hooks (useDebounce, useMediaQuery 等)
+    ├── i18n/            # 国际化配置和语言资源
     ├── ui/              # UI 组件库 (Shadcn + Custom)
     ├── lib/             # 工具函数
     └── constants/       # 常量
@@ -130,7 +135,7 @@ src/
 - **[路由规范](./docs/rules/routing.md)** - 路由配置、路由保护、懒加载
 - **[API 规范](./docs/rules/api.md)** - HTTP 客户端、错误处理、请求拦截
 - **[Hooks 规范](./docs/rules/hooks.md)** - Hooks 库推荐、使用规范、集成方案
-- **[Hooks 库对比](./docs/rules/hooks-comparison.md)** - 主流 Hooks 库详细对比分析
+- **[国际化规范](./docs/rules/i18n.md)** - react-i18next 使用规范、语言资源管理
 
 ### 侧边栏开发规范（重要）
 

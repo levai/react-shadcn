@@ -2,6 +2,7 @@ import React, { memo, useCallback, useState, useRef, useEffect } from 'react'
 import { NavLink } from 'react-router-dom'
 import { PanelLeftClose, PanelLeft, Layers, GripVertical } from 'lucide-react'
 import { useAppStore } from '@/shared/stores'
+import { useTranslation } from '@/shared/i18n'
 import { menuRoutes, type AppRouteConfig } from '@/routes'
 import { cn } from '@/shared/lib'
 import {
@@ -231,26 +232,39 @@ const ResizeHandle = memo(function ResizeHandle({
   )
 })
 
+// 路由路径到翻译键的映射
+const routeTitleMap: Record<string, string> = {
+  '/': 'nav.home',
+  '/dashboard': 'nav.overview',
+  '/settings': 'nav.settings',
+}
+
 // 将路由配置转换为导航分组
-function convertRoutesToNavGroups(routes: AppRouteConfig[]): NavGroupType[] {
+function convertRoutesToNavGroups(routes: AppRouteConfig[], t: (key: string) => string): NavGroupType[] {
   // 过滤出需要显示的菜单项
   const visibleRoutes = routes.filter(
     (route) => route.meta && !route.meta.hideInMenu && route.path
   )
 
   // 将所有菜单项放在一个默认分组中
-  const items: NavItemType[] = visibleRoutes.map((route) => ({
-    id: route.path || '',
-    path: route.path || '#',
-    icon: route.meta?.icon,
-    label: route.meta?.title || route.path || '',
-    visible: true,
-  }))
+  const items: NavItemType[] = visibleRoutes.map((route) => {
+    // 优先使用翻译键，如果没有映射则使用原始 title
+    const translationKey = routeTitleMap[route.path || '']
+    const label = translationKey ? t(translationKey) : (route.meta?.title || route.path || '')
+    
+    return {
+      id: route.path || '',
+      path: route.path || '#',
+      icon: route.meta?.icon,
+      label,
+      visible: true,
+    }
+  })
 
   return [
     {
       id: 'default',
-      title: '菜单',
+      title: t('sidebar.menu'),
       items,
       visible: true,
     },
@@ -260,10 +274,11 @@ function convertRoutesToNavGroups(routes: AppRouteConfig[]): NavGroupType[] {
 // 主布局组件
 function Sidebar() {
   const { preferences, toggleSidebar, updatePreferences } = useAppStore()
+  const { t } = useTranslation('layout')
   const isCollapsed = preferences.sidebarCollapsed
 
   // 将路由配置转换为导航分组
-  const navGroups = convertRoutesToNavGroups(menuRoutes)
+  const navGroups = convertRoutesToNavGroups(menuRoutes, t)
 
   // 侧边栏宽度状态
   const [sidebarWidth, setSidebarWidth] = useState(
@@ -390,14 +405,14 @@ function Sidebar() {
                 ) : (
                   <>
                     <PanelLeftClose className="h-5 w-5 shrink-0" />
-                    <span className="text-sm font-medium">收起菜单</span>
+                    <span className="text-sm font-medium">{t('sidebar.collapseMenu')}</span>
                   </>
                 )}
               </button>
             </TooltipTrigger>
             {isCollapsed && (
               <TooltipContent side="right" sideOffset={6}>
-                展开菜单 (Ctrl+B)
+                {t('sidebar.expandMenuShortcut')}
                 <TooltipArrow />
               </TooltipContent>
             )}

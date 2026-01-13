@@ -9,9 +9,9 @@ source: ../docs/rules
 
 ---
 
-所有开发流程请严格遵守 `docs/rules/` 目录中的 `global.md`、`api.md`、`ui.md`、`routing.md`、`git.md`、`hooks.md` 等文件，不得自行扩展或删减规则；必须以这些规范文档为唯一约束来源。
+所有开发流程请严格遵守 `docs/rules/` 目录中的 `global.md`、`api.md`、`ui.md`、`routing.md`、`git.md`、`hooks.md`、`i18n.md` 等文件，不得自行扩展或删减规则；必须以这些规范文档为唯一约束来源。
 
-页面模板、功能模块、Hooks、Provider 等开发工作流请严格遵守 `.agent/workflows/` 目录中的 `add-page.md`、`add-feature.md`、`add-hook.md`、`add-provider.md`、`use-request-best-practices.md` 等工作流文档，确保代码结构和实现方式符合项目规范。
+页面模板、功能模块、Hooks、Provider、国际化等开发工作流请严格遵守 `.agent/workflows/` 目录中的 `add-page.md`、`add-feature.md`、`add-hook.md`、`add-provider.md`、`add-i18n.md`、`use-request-best-practices.md` 等工作流文档，确保代码结构和实现方式符合项目规范。
 
 ## 规范文档列表
 
@@ -22,6 +22,7 @@ source: ../docs/rules
 - **[路由规范](../docs/rules/routing.md)** - 路由配置、路由保护、懒加载
 - **[API 规范](../docs/rules/api.md)** - HTTP 客户端、错误处理、请求拦截、useRequest 使用规范
 - **[Hooks 规范](../docs/rules/hooks.md)** - Hooks 库（ahooks）使用规范、常用 Hooks 列表
+- **[国际化规范](../docs/rules/i18n.md)** - react-i18next 使用规范、语言资源管理、语言切换
 - **[Git 提交规范](../docs/rules/git.md)** - Commit message 格式、提交类型、AI 生成指南
 - **[useRequest 使用指南](../docs/rules/useRequest-guide.md)** - useRequest 与 Axios 拦截器配合使用详细指南
 
@@ -33,4 +34,5 @@ source: ../docs/rules
 - **[添加新功能模块](../../.agent/workflows/add-feature.md)** - Feature 目录结构、Store、API、UI 组件
 - **[添加新 Hook](../../.agent/workflows/add-hook.md)** - 共享 Hooks 和功能特定 Hooks 的创建规范
 - **[添加新 Provider](../../.agent/workflows/add-provider.md)** - Provider 组件组织、嵌套顺序
+- **[国际化工作流](../../.agent/workflows/add-i18n.md)** - 添加新语言、新命名空间、在组件中使用
 - **[useRequest 最佳实践](../../.agent/workflows/use-request-best-practices.md)** - useRequest 统一使用规范、迁移指南

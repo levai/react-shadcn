@@ -2,8 +2,10 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuthStore } from '@/features/auth'
 import { useAppStore } from '@/shared/stores'
 import { ROUTES } from '@/shared/constants'
+import { useTranslation } from '@/shared/i18n'
 import {
   ThemeToggle,
+  LanguageToggle,
   Button,
   DropdownMenu,
   DropdownMenuTrigger,
@@ -18,15 +20,25 @@ export function Header() {
   const location = useLocation()
   const { user, logout } = useAuthStore()
   const { toggleSidebar } = useAppStore()
+  // 加载多个命名空间：layout 作为默认，auth 作为辅助
+  const { t } = useTranslation(['layout', 'auth'])
 
   const handleLogout = () => {
     logout()
     navigate(ROUTES.LOGIN)
   }
 
+  // 路由路径到翻译键的映射
+  const routeTitleMap: Record<string, string> = {
+    '/': 'nav.home',
+    '/dashboard': 'nav.overview',
+    '/settings': 'nav.settings',
+  }
+
   // 获取当前页面标题
   const currentRoute = menuRoutes.find(route => route.path === location.pathname)
-  const pageTitle = currentRoute?.meta?.title || '控制台'
+  const translationKey = currentRoute?.path ? routeTitleMap[currentRoute.path] : null
+  const pageTitle = translationKey ? t(translationKey) : (currentRoute?.meta?.title || t('nav.dashboard'))
 
   return (
     <header className='sticky top-0 z-10 flex h-16 w-full items-center gap-4 border-b bg-background px-6 backdrop-blur'>
@@ -40,6 +52,7 @@ export function Header() {
       </div>
 
       <div className='flex items-center gap-3'>
+        <LanguageToggle />
         <ThemeToggle />
 
         {user ? (
@@ -63,13 +76,13 @@ export function Header() {
                 className='text-red-600 focus:text-red-600 focus:bg-red-50 dark:focus:bg-red-950/20'
               >
                 <LogOut className='mr-2 h-4 w-4' />
-                <span>退出登录</span>
+                <span>{t('auth:logout')}</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         ) : (
           <Button variant='default' size='sm' onClick={() => navigate(ROUTES.LOGIN)}>
-            登录
+            {t('auth:login')}
           </Button>
         )}
       </div>

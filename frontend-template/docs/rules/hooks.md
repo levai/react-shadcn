@@ -43,8 +43,8 @@ yarn add ahooks
 export {
   useDebounce,
   useThrottle,
-  useLocalStorage,
-  useSessionStorage,
+  useLocalStorageState,
+  useSessionStorageState,
   useToggle,
   usePrevious,
   useClickAway,
@@ -65,7 +65,7 @@ export { useMediaQuery } from './useMediaQuery'
 // ✅ 正确：从 @/shared/hooks 导入
 import { 
   useDebounce, 
-  useLocalStorage, 
+  useLocalStorageState, 
   useRequest,
   useMediaQuery 
 } from '@/shared/hooks'
@@ -81,8 +81,8 @@ import { useDebounce } from 'ahooks'
 | **useRequest** | 数据请求（缓存、重试、轮询） | `const { data, loading } = useRequest(fetchData)` |
 | **useDebounce** | 防抖 | `const debounced = useDebounce(value, 300)` |
 | **useThrottle** | 节流 | `const throttled = useThrottle(value, 300)` |
-| **useLocalStorage** | localStorage | `const [value, setValue] = useLocalStorage('key', defaultValue)` |
-| **useSessionStorage** | sessionStorage | `const [value, setValue] = useSessionStorage('key', defaultValue)` |
+| **useLocalStorageState** | localStorage | `const [value, setValue] = useLocalStorageState('key', { defaultValue: 'init' })` |
+| **useSessionStorageState** | sessionStorage | `const [value, setValue] = useSessionStorageState('key', { defaultValue: 'init' })` |
 | **useToggle** | 布尔切换 | `const [isOpen, toggle] = useToggle(false)` |
 | **usePrevious** | 上一次值 | `const prev = usePrevious(value)` |
 | **useClickAway** | 点击外部 | `useClickAway(ref, () => setIsOpen(false))` |
@@ -172,7 +172,7 @@ const { data, loading, refresh } = useRequest(
 import { 
   useRequest, 
   useDebounce, 
-  useLocalStorage,
+  useLocalStorageState,
   useMediaQuery,
   useToggle 
 } from '@/shared/hooks'
@@ -194,7 +194,7 @@ function UserProfile({ userId }: { userId: string }) {
   const debouncedSearch = useDebounce(searchTerm, 300)
 
   // 本地存储
-  const [theme, setTheme] = useLocalStorage('theme', 'light')
+  const [theme, setTheme] = useLocalStorageState('theme', { defaultValue: 'light' })
 
   // 媒体查询
   const isDesktop = useMediaQuery('(min-width: 1024px)')

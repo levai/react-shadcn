@@ -15,13 +15,13 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
   const { isAuthenticated, isLoading } = useAuthStore()
   const location = useLocation()
 
-  if (isLoading) {
-    return <PageLoader />
-  }
+  // if (isLoading) {
+  //   return <PageLoader />
+  // }
 
-  if (!isAuthenticated) {
-    return <Navigate to={ROUTES.LOGIN} state={{ from: location }} replace />
-  }
+  // if (!isAuthenticated) {
+  //   return <Navigate to={ROUTES.LOGIN} state={{ from: location }} replace />
+  // }
 
   return <>{children}</>
 }

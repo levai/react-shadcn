@@ -10,8 +10,8 @@
 export {
   useDebounce,
   useThrottle,
-  useLocalStorage,
-  useSessionStorage,
+  useLocalStorageState,
+  useSessionStorageState,
   useToggle,
   usePrevious,
   useClickAway,

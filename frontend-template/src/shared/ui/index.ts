@@ -2,6 +2,7 @@
 export { PageLoader } from './PageLoader'
 export { LazyLoad } from './LazyLoad'
 export { ThemeToggle } from './ThemeToggle'
+export { LanguageToggle } from './LanguageToggle'
 
 // Shadcn UI Components
 export { Button, buttonVariants } from './button'

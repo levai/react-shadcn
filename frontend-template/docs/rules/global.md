@@ -9,6 +9,7 @@
 - **Zustand**: 5.x（状态管理）
 - **React Router**: 7.x
 - **Axios**: HTTP 客户端
+- **react-i18next**: 国际化（i18n）
 
 ## 目录结构 (Feature-Sliced Design)
 
@@ -39,6 +40,7 @@ src/
 │   ├── ui/           # 基础 UI 组件
 │   ├── lib/          # 工具函数 (cn 等)
 │   ├── hooks/        # 共享 Hooks (useDebounce, useMediaQuery 等)
+│   ├── i18n/         # 国际化配置和语言资源
 │   ├── api/          # HTTP 客户端
 │   ├── types/        # 通用类型定义
 │   ├── config/       # 应用配置
@@ -70,7 +72,7 @@ import { LoginForm } from '../../features/auth'
 import { LoginForm, useAuthStore, authService } from '@/features/auth'
 
 // ✅ 正确 - 共享 Hooks 导入
-import { useDebounce, useMediaQuery, useLocalStorage } from '@/shared/hooks'
+import { useDebounce, useMediaQuery, useLocalStorageState } from '@/shared/hooks'
 
 // ❌ 错误 - 不要直接导入内部文件
 import { LoginForm } from '@/features/auth/ui/LoginForm'
@@ -125,9 +127,9 @@ function UserProfile({ userId }: { userId: string }) {
    const debouncedValue = useDebounce(value, 300)
    ```
 
-3. **useLocalStorage** - 同步 localStorage
+3. **useLocalStorageState** - 同步 localStorage
    ```typescript
-   const [theme, setTheme] = useLocalStorage('theme', 'light')
+   const [theme, setTheme] = useLocalStorageState('theme', { defaultValue: 'light' })
    ```
 
 4. **useMediaQuery** - 监听媒体查询变化（自定义）
