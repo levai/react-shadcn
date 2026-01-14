@@ -28,43 +28,25 @@
 
 ## 完整示例
 
-### 1. Axios 配置（已有）
+### 1. HTTP 客户端配置（已有）
 
 ```typescript
-// src/shared/api/client.ts
-import axios from 'axios'
+// src/shared/http/client.ts
+import { RequestClient } from './client'
 
-export const api = axios.create({
-  baseURL: env.apiBaseUrl,
-  timeout: 30000,
-})
+// 创建默认实例（已配置拦截器）
+export const clientHttp = new RequestClient()
 
-// 请求拦截器 - 自动添加 Token
-api.interceptors.request.use((config) => {
-  const token = getToken()
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`
-  }
-  return config
-})
-
-// 响应拦截器 - 统一处理
-api.interceptors.response.use(
-  (response) => response.data,
-  (error) => {
-    if (error.response?.status === 401) {
-      // 处理 401
-    }
-    return Promise.reject(error)
-  }
-)
+// 拦截器已自动配置：
+// - 请求拦截：自动添加 Token、开发日志
+// - 响应拦截：统一错误处理、401 跳转登录
 ```
 
 ### 2. 服务层封装
 
 ```typescript
 // src/features/user/api/user.service.ts
-import { request } from '@/shared/api'
+import { clientHttp } from '@/shared/http'
 
 const API = {
   GET_USER: (id: string) => `/v1/users/${id}`,
@@ -72,7 +54,7 @@ const API = {
 
 const userService = {
   getUser: async (id: string): Promise<User> => {
-    return request<User>(API.GET_USER(id))
+    return clientHttp.get<User>(API.GET_USER(id))
   },
 }
 
@@ -117,12 +99,9 @@ function UserPage({ userId }: { userId: string }) {
 ### 场景一：带参数的请求
 
 ```typescript
-const { data, loading } = useRequest(
-  (params) => userService.searchUsers(params),
-  {
-    manual: true,  // 手动触发
-  }
-)
+const { data, loading } = useRequest(params => userService.searchUsers(params), {
+  manual: true, // 手动触发
+})
 
 // 触发请求
 data({ keyword: 'test', page: 1 })
@@ -131,15 +110,12 @@ data({ keyword: 'test', page: 1 })
 ### 场景二：POST 请求
 
 ```typescript
-const { run: createUser, loading } = useRequest(
-  (data) => userService.createUser(data),
-  {
-    manual: true,
-    onSuccess: () => {
-      toast.success('创建成功')
-    },
-  }
-)
+const { run: createUser, loading } = useRequest(data => userService.createUser(data), {
+  manual: true,
+  onSuccess: () => {
+    toast.success('创建成功')
+  },
+})
 
 // 触发请求
 createUser({ name: 'John', email: 'john@example.com' })
@@ -148,13 +124,10 @@ createUser({ name: 'John', email: 'john@example.com' })
 ### 场景三：轮询
 
 ```typescript
-const { data } = useRequest(
-  () => userService.getStatus(userId),
-  {
-    pollingInterval: 3000,  // 每 3 秒轮询一次
-    pollingWhenHidden: false,  // 页面隐藏时停止轮询
-  }
-)
+const { data } = useRequest(() => userService.getStatus(userId), {
+  pollingInterval: 3000, // 每 3 秒轮询一次
+  pollingWhenHidden: false, // 页面隐藏时停止轮询
+})
 ```
 
 ### 场景四：防抖请求
@@ -162,13 +135,10 @@ const { data } = useRequest(
 ```typescript
 const [keyword, setKeyword] = useState('')
 
-const { data } = useRequest(
-  () => userService.search(keyword),
-  {
-    debounceWait: 300,  // 防抖 300ms
-    refreshDeps: [keyword],  // keyword 变化时刷新
-  }
-)
+const { data } = useRequest(() => userService.search(keyword), {
+  debounceWait: 300, // 防抖 300ms
+  refreshDeps: [keyword], // keyword 变化时刷新
+})
 ```
 
 ## 优势总结
@@ -192,7 +162,7 @@ const { data } = useRequest(
 
 ```typescript
 // ✅ 正确：在 Store 中直接调用
-export const useAppStore = create((set) => ({
+export const useAppStore = create(set => ({
   init: async () => {
     const user = await authService.getCurrentUser()
     set({ user })
@@ -213,6 +183,7 @@ async function exportData() {
 **在 React 组件中，统一使用 `useRequest` 进行数据请求。**
 
 **理由：**
+
 1. **代码一致性** - 所有组件使用相同模式
 2. **减少样板代码** - 无需手动管理 loading、error 状态
 3. **功能强大** - 缓存、重试等功能开箱即用

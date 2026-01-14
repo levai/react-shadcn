@@ -99,7 +99,7 @@ src/
 │   ├── router.tsx       # 路由配置 (含 menuRoutes)
 │   └── AppRouter.tsx    # 路由 Provider
 └── shared/              # 共享层
-    ├── api/             # HTTP 客户端
+    ├── http/            # HTTP 客户端 (RequestClient)
     ├── config/           # 环境变量配置
     ├── hooks/           # 共享 Hooks (useDebounce, useMediaQuery 等)
     ├── i18n/            # 国际化配置和语言资源

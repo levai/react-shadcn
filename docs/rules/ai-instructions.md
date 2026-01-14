@@ -141,21 +141,64 @@ import { useAppStore } from '@/shared/stores'
 // 位置：src/features/[feature]/model/[feature].store.ts
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
+import { getStorageKey } from '@/shared/config'
+
+const AUTH_STORAGE_KEY = getStorageKey('auth')
 
 interface AuthState {
   user: User | null
-  setUser: (user: User) => void
+  accessToken: string | null
+  isAuthenticated: boolean
+  isLoading: boolean
+  login: (user: User, token: string) => void
+  logout: () => void
+  setLoading: (loading: boolean) => void
 }
 
 export const useAuthStore = create<AuthState>()(
   persist(
     set => ({
       user: null,
-      setUser: user => set({ user }),
+      accessToken: null,
+      isAuthenticated: false,
+      isLoading: true,
+      login: (user, token) => {
+        set({
+          user,
+          accessToken: token,
+          isAuthenticated: true,
+          isLoading: false,
+        })
+      },
+      logout: () => {
+        set({
+          user: null,
+          accessToken: null,
+          isAuthenticated: false,
+          isLoading: false,
+        })
+      },
+      setLoading: isLoading => set({ isLoading }),
     }),
     {
-      name: 'auth-storage',
-      partialize: state => ({ user: state.user }),
+      name: AUTH_STORAGE_KEY,
+      // 只持久化必要状态
+      partialize: state => ({
+        user: state.user,
+        accessToken: state.accessToken,
+      }),
+      // 恢复后重新计算派生状态
+      onRehydrateStorage: () => (state, error) => {
+        if (error) {
+          console.error('Auth store hydration error:', error)
+          if (state) {
+            state.logout()
+          }
+        } else if (state) {
+          state.isAuthenticated = !!state.user && !!state.accessToken
+          state.setLoading(false)
+        }
+      },
     }
   )
 )
@@ -168,7 +211,7 @@ export { useAuthStore } from './model'
 ### API 服务模式
 
 ```typescript
-import { request } from '@/shared/api'
+import { clientHttp } from '@/shared/http'
 
 const API = {
   LOGIN: '/v1/auth/login',
@@ -187,10 +230,7 @@ export interface LoginResponse {
 
 const authService = {
   login: async (data: LoginRequest): Promise<LoginResponse> => {
-    return request<LoginResponse>(API.LOGIN, {
-      method: 'POST',
-      data,
-    })
+    return clientHttp.post<LoginResponse, LoginRequest>(API.LOGIN, data)
   },
 }
 

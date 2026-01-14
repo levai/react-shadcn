@@ -1,6 +1,7 @@
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
+import { env } from '@/shared/config'
 
 // 导入语言资源
 import zhCN from './locales/zh-CN'
@@ -25,7 +26,7 @@ i18n
     // 支持的语言列表
     supportedLngs: ['zh-CN', 'en-US'],
     // 调试模式（开发环境开启）
-    debug: import.meta.env.DEV,
+    debug: env.isDev,
     // 命名空间
     defaultNS: 'common',
     // 命名空间列表

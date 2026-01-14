@@ -14,6 +14,15 @@ export const env = {
 
   /** API 基础 URL */
   apiBaseUrl: import.meta.env.VITE_API_BASE_URL || '/api',
+
+  /** 是否为开发环境 */
+  isDev: import.meta.env.DEV,
+
+  /** 是否为生产环境 */
+  isProd: import.meta.env.PROD,
+
+  /** 当前环境模式 */
+  mode: import.meta.env.MODE,
 } as const
 
 /**

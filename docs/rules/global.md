@@ -332,10 +332,19 @@ import { useAuthStore } from '@/features/auth/model/auth.store'
 export const useAppStore = create<AppState>()(
   persist(
     set => ({
-      /* ... */
+      preferences: {
+        sidebarCollapsed: false,
+        sidebarWidth: 260,
+      },
+      updatePreferences: prefs => {
+        set(state => ({
+          preferences: { ...state.preferences, ...prefs },
+        }))
+      },
     }),
     {
       name: 'app-storage',
+      // 只持久化必要状态
       partialize: state => ({
         preferences: state.preferences,
       }),
@@ -357,15 +366,35 @@ import { getStorageKey } from '@/shared/config'
 const STORAGE_KEY = getStorageKey('[feature]')
 
 interface [Feature]State {
-  // 状态定义
+  data: unknown
+  isLoading: boolean
+  setData: (data: unknown) => void
+  setLoading: (loading: boolean) => void
 }
 
 export const use[Feature]Store = create<[Feature]State>()(
   persist(
-    (set) => ({ /* ... */ }),
+    set => ({
+      data: null,
+      isLoading: false,
+      setData: data => set({ data }),
+      setLoading: isLoading => set({ isLoading }),
+    }),
     {
       name: STORAGE_KEY,
-      partialize: (state) => ({ /* 需要持久化的字段 */ }),
+      // 只持久化必要状态，不持久化 isLoading 等临时状态
+      partialize: state => ({
+        data: state.data,
+      }),
+      // 恢复后处理逻辑（可选）
+      onRehydrateStorage: () => (state, error) => {
+        if (error) {
+          console.error('[Feature] store hydration error:', error)
+        } else if (state) {
+          // 恢复后重置临时状态
+          state.setLoading(false)
+        }
+      },
     }
   )
 )

@@ -1,4 +1,4 @@
-import { request } from '@/shared/api'
+import { clientHttp } from '@/shared/http'
 import type { User, LoginRequest, LoginResponse } from '../types'
 
 const API = {
@@ -13,24 +13,17 @@ const API = {
 const authService = {
   /** 登录 */
   login: async (data: LoginRequest): Promise<LoginResponse> => {
-    return request<LoginResponse>(API.LOGIN, {
-      method: 'POST',
-      data,
-    })
+    return clientHttp.post<LoginResponse, LoginRequest>(API.LOGIN, data)
   },
 
   /** 登出 */
   logout: async (): Promise<void> => {
-    return request<void>(API.LOGOUT, {
-      method: 'POST',
-    })
+    return clientHttp.post<void>(API.LOGOUT)
   },
 
   /** 获取当前用户 */
   getCurrentUser: async (): Promise<User> => {
-    return request<User>(API.CURRENT_USER, {
-      method: 'GET',
-    })
+    return clientHttp.get<User>(API.CURRENT_USER)
   },
 }
 

@@ -33,25 +33,50 @@ src/features/[feature-name]/
 ```typescript
 // src/features/[name]/model/[name].store.ts
 import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
+import { getStorageKey } from '@/shared/config'
+
+const STORAGE_KEY = getStorageKey('[name]')
 
 interface FeatureState {
   data: unknown
   isLoading: boolean
   setData: (data: unknown) => void
+  setLoading: (loading: boolean) => void
 }
 
-export const useFeatureStore = create<FeatureState>(set => ({
-  data: null,
-  isLoading: false,
-  setData: data => set({ data }),
-}))
+export const useFeatureStore = create<FeatureState>()(
+  persist(
+    set => ({
+      data: null,
+      isLoading: false,
+      setData: data => set({ data }),
+      setLoading: isLoading => set({ isLoading }),
+    }),
+    {
+      name: STORAGE_KEY,
+      // 只持久化必要状态
+      partialize: state => ({
+        data: state.data,
+      }),
+      // 恢复后处理逻辑（可选）
+      onRehydrateStorage: () => (state, error) => {
+        if (error) {
+          console.error('[Feature] store hydration error:', error)
+        } else if (state) {
+          state.setLoading(false)
+        }
+      },
+    }
+  )
+)
 ```
 
 ### 3. 创建 API 服务
 
 ```typescript
 // src/features/[name]/api/[name].service.ts
-import { request } from '@/shared/api'
+import { clientHttp } from '@/shared/http'
 
 const API = {
   LIST: '/v1/features',
@@ -59,8 +84,8 @@ const API = {
 } as const
 
 const featureService = {
-  list: async () => request(API.LIST),
-  detail: async (id: string) => request(API.DETAIL(id)),
+  list: async () => clientHttp.get(API.LIST),
+  detail: async (id: string) => clientHttp.get(API.DETAIL(id)),
 }
 
 export default featureService
