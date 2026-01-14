@@ -19,8 +19,8 @@ export function LoginForm() {
   const { t } = useTranslation(['auth', 'common'])
   const [isLoading, setIsLoading] = useState(false)
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
+    username: 'admin',
+    password: '123456',
   })
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -29,8 +29,8 @@ export function LoginForm() {
 
     try {
       const response = await authService.login(formData)
-      const user = await authService.getCurrentUser()
-      login(user, response.accessToken)
+      // const user = await authService.getCurrentUser()
+      login(null as any, response.token)
       toast.success(t('messages.loginSuccess'))
       navigate(ROUTES.HOME)
     } catch {
@@ -43,13 +43,12 @@ export function LoginForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4 w-full max-w-sm">
       <div className="space-y-2">
-        <Label htmlFor="email">{t('form.email')}</Label>
+        <Label htmlFor="username">{t('form.username')}</Label>
         <Input
-          id="email"
-          type="email"
-          value={formData.email}
-          onChange={e => setFormData({ ...formData, email: e.target.value })}
-          placeholder="admin@example.com"
+          id="username"
+          value={formData.username}
+          onChange={e => setFormData({ ...formData, username: e.target.value })}
+          placeholder="请输入名称"
           required
           disabled={isLoading}
         />
@@ -62,7 +61,7 @@ export function LoginForm() {
           type="password"
           value={formData.password}
           onChange={e => setFormData({ ...formData, password: e.target.value })}
-          placeholder="123456"
+          placeholder="请输入密码"
           required
           disabled={isLoading}
         />

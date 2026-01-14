@@ -8,21 +8,18 @@
 export interface User {
   id: string
   name: string
-  email: string
   avatar?: string
   roles?: string[]
 }
 
 /** 登录请求 */
 export interface LoginRequest {
-  email: string
+  username: string
   password: string
 }
 
-/** 登录响应 */
+/** 登录响应（后端返回的 data 字段内容） */
 export interface LoginResponse {
-  accessToken: string
-  refreshToken?: string
-  tokenType: string
-  expiryDuration: number
+  token: string
+  expireTime: number | null
 }

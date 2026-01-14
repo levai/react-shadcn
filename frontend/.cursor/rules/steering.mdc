@@ -1,0 +1,167 @@
+---
+alwaysApply: true
+description: 项目核心开发规范和架构指导原则
+---
+
+# 项目开发规范
+
+> 📖 **详细规范**: 完整规范请查看 [`docs/rules/ai-instructions.md`](../../docs/rules/ai-instructions.md)
+
+本项目使用 **Feature-Sliced Design (FSD)** 架构，专为 AI 辅助编程优化。
+
+## 技术栈
+
+- React 19 + TypeScript 5.9
+- Vite 7 + Tailwind CSS 4
+- Zustand (状态管理)
+- React Router 7 (路由)
+- Axios (HTTP 客户端)
+- react-i18next (国际化)
+- ahooks (Hooks 库)
+- sonner (Toast 通知)
+- lucide-react (图标库)
+
+## 目录结构
+
+```
+src/
+├── app/              # 应用层：入口、Provider、布局
+├── features/         # 功能层：业务功能模块
+│   └── [feature]/
+│       ├── ui/       # UI 组件
+│       ├── api/      # API 服务
+│       ├── model/    # 状态管理 (Zustand)
+│       └── index.ts  # 统一导出
+├── pages/            # 页面层：路由入口
+├── shared/           # 共享层：工具、类型、配置
+└── routes/           # 路由配置
+```
+
+## 核心规则
+
+### 路径别名
+
+**必须使用 `@/` 前缀，禁止相对路径：**
+
+```typescript
+// ✅ 正确
+import { LoginForm } from '@/features/auth'
+import { cn } from '@/shared/lib'
+
+// ❌ 错误
+import { LoginForm } from '../../features/auth'
+```
+
+### 导入规则
+
+1. **从 feature 的 `index.ts` 导入**，不要导入内部文件
+2. **使用具名导入**，避免 `import *`
+3. **共享 Hooks 从 `@/shared/hooks` 导入**
+
+```typescript
+// ✅ 正确
+import { LoginForm, useAuthStore, authService } from '@/features/auth'
+import { useRequest } from '@/shared/hooks'
+
+// ❌ 错误
+import { LoginForm } from '@/features/auth/ui/LoginForm'
+```
+
+### 组件模式
+
+**页面组件：**
+```typescript
+const LoginPage = () => {
+  return <div>...</div>
+}
+export default LoginPage
+```
+
+**功能组件：**
+```typescript
+export function LoginForm({ onSubmit }: Props) {
+  return <form>...</form>
+}
+```
+
+### 数据请求
+
+**统一使用 `useRequest` Hook：**
+
+```typescript
+import { useRequest } from '@/shared/hooks'
+
+const { data, loading, error } = useRequest(
+  () => userService.getUser(userId),
+  { refreshDeps: [userId] }
+)
+```
+
+### 国际化
+
+**必须使用 i18n，禁止硬编码文本：**
+
+```typescript
+import { useTranslation } from '@/shared/i18n'
+
+const { t } = useTranslation('common')
+return <div>{t('actions.confirm')}</div>
+```
+
+### 路由
+
+**使用 ROUTES 常量，禁止硬编码路径：**
+
+```typescript
+import { ROUTES } from '@/shared/constants'
+navigate(ROUTES.HOME)  // ✅ 正确
+navigate('/')           // ❌ 错误
+```
+
+### 样式
+
+**使用 `cn()` 工具函数：**
+
+```typescript
+import { cn } from '@/shared/lib'
+<div className={cn('base', isActive && 'active')} />
+```
+
+**使用 CSS 变量，禁止硬编码颜色：**
+
+```typescript
+className="bg-primary text-primary-foreground"  // ✅ 正确
+className="bg-[#05C79A]"                        // ❌ 错误
+```
+
+### 图标和通知
+
+**统一使用：**
+- 图标：`lucide-react`
+- Toast：`sonner`
+
+```typescript
+import { Home } from 'lucide-react'
+import { toast } from 'sonner'
+
+<Home className="h-5 w-5" />
+toast.success('操作成功')
+```
+
+## 关键规则总结
+
+1. ✅ 使用 `@/` 路径别名
+2. ✅ 从 feature 的 `index.ts` 导入
+3. ✅ 使用 `cn()` 处理类名
+4. ✅ 使用 TypeScript 类型
+5. ✅ 始终使用 i18n
+6. ✅ 使用 `useRequest` 进行数据请求
+7. ✅ 使用 ROUTES 常量
+8. ✅ 使用 toast (sonner)
+9. ✅ 使用 lucide-react 图标
+10. ✅ 遵循 FSD 架构
+
+## 详细规范
+
+**统一规范源文件（包含所有文档链接）：**
+- **[AI 编程助手统一规范](../../docs/rules/ai-instructions.md)** - 所有详细规则、代码示例和完整文档列表（**唯一维护源**）
