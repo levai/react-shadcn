@@ -1,10 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import type { User } from '../types'
-import { getStorageKey } from '@/shared/config'
-
-/** 认证存储 key */
-const AUTH_STORAGE_KEY = getStorageKey('auth')
+import { STORAGE_KEYS } from '@/shared/constants'
 
 interface AuthState {
   /** 当前用户 */
@@ -53,7 +50,7 @@ export const useAuthStore = create<AuthState>()(
       setLoading: isLoading => set({ isLoading }),
     }),
     {
-      name: AUTH_STORAGE_KEY,
+      name: STORAGE_KEYS.AUTH,
       // 只持久化必要状态，isAuthenticated 会在恢复后重新计算
       partialize: state => ({
         user: state.user,
@@ -79,6 +76,3 @@ export const useAuthStore = create<AuthState>()(
     }
   )
 )
-
-// 导出存储 key，供其他模块使用
-export { AUTH_STORAGE_KEY }

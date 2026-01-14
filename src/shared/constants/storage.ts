@@ -8,4 +8,5 @@ import { getStorageKey } from '@/shared/config'
 export const STORAGE_KEYS = {
   /** i18n 语言设置 */
   I18N: getStorageKey('i18n'),
+  AUTH: getStorageKey('auth'),
 } as const

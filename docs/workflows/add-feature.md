@@ -30,13 +30,24 @@ src/features/[feature-name]/
 
 ### 2. 创建状态管理 (Zustand Store)
 
+**存储 Key 管理：**
+
+- **共享存储 Key**（如 `AUTH`、`I18N`）：统一在 `src/shared/constants/storage.ts` 中定义
+- **Feature 特定存储 Key**：建议也在 `STORAGE_KEYS` 中统一管理
+
 ```typescript
+// 1. 先在 src/shared/constants/storage.ts 中添加新的存储 key
+export const STORAGE_KEYS = {
+  I18N: getStorageKey('i18n'),
+  AUTH: getStorageKey('auth'),
+  [FEATURE]: getStorageKey('[name]'), // 新增
+} as const
+
+// 2. 在 store 中使用
 // src/features/[name]/model/[name].store.ts
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { getStorageKey } from '@/shared/config'
-
-const STORAGE_KEY = getStorageKey('[name]')
+import { STORAGE_KEYS } from '@/shared/constants'
 
 interface FeatureState {
   data: unknown
@@ -54,7 +65,7 @@ export const useFeatureStore = create<FeatureState>()(
       setLoading: isLoading => set({ isLoading }),
     }),
     {
-      name: STORAGE_KEY,
+      name: STORAGE_KEYS.[FEATURE], // 使用统一的存储 key
       // 只持久化必要状态
       partialize: state => ({
         data: state.data,
@@ -71,6 +82,8 @@ export const useFeatureStore = create<FeatureState>()(
   )
 )
 ```
+
+**注意：** 不再需要导出 `STORAGE_KEY`，统一使用 `STORAGE_KEYS` 管理。
 
 ### 3. 创建 API 服务
 

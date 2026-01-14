@@ -357,13 +357,21 @@ export const useAppStore = create<AppState>()(
 
 **必须放在 `model/` 目录下：**
 
+**存储 Key 管理：**
+
+- **共享存储 Key**（如 `AUTH`、`I18N`）：统一在 `src/shared/constants/storage.ts` 中定义，使用 `STORAGE_KEYS`
+- **Feature 特定存储 Key**：可以使用 `getStorageKey()`，但建议也统一到 `STORAGE_KEYS` 中管理
+
 ```typescript
 // features/[feature]/model/[feature].store.ts
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { getStorageKey } from '@/shared/config'
+// 方式 1：使用统一的 STORAGE_KEYS（推荐，如果已在 storage.ts 中定义）
+import { STORAGE_KEYS } from '@/shared/constants'
 
-const STORAGE_KEY = getStorageKey('[feature]')
+// 方式 2：Feature 特定 key（如果未在 storage.ts 中定义）
+// import { getStorageKey } from '@/shared/config'
+// const STORAGE_KEY = getStorageKey('[feature]')
 
 interface [Feature]State {
   data: unknown
@@ -381,7 +389,10 @@ export const use[Feature]Store = create<[Feature]State>()(
       setLoading: isLoading => set({ isLoading }),
     }),
     {
-      name: STORAGE_KEY,
+      // 使用 STORAGE_KEYS（推荐）
+      name: STORAGE_KEYS.[FEATURE],
+      // 或使用本地定义的 key
+      // name: STORAGE_KEY,
       // 只持久化必要状态，不持久化 isLoading 等临时状态
       partialize: state => ({
         data: state.data,
@@ -400,12 +411,14 @@ export const use[Feature]Store = create<[Feature]State>()(
 )
 ```
 
+**注意：** 不再需要导出 `STORAGE_KEY`，统一使用 `STORAGE_KEYS` 管理。
+
 **必须通过 model/index.ts 导出：**
 
 ```typescript
 // features/[feature]/model/index.ts
 export { use[Feature]Store } from './[feature].store'
-export { STORAGE_KEY } from './[feature].store'
+// 不再导出 STORAGE_KEY，统一使用 STORAGE_KEYS
 ```
 
 **必须通过 feature/index.ts 统一导出：**
@@ -482,11 +495,11 @@ import { useAuthStore } from '@/features/auth/model/auth.store'
 
 ### Store 命名规范总结
 
-| Store 类型   | 文件命名               | Hook 命名           | 示例                                |
-| ------------ | ---------------------- | ------------------- | ----------------------------------- |
-| 全局应用状态 | `app.store.ts`         | `useAppStore`       | `shared/stores/app.store.ts`        |
-| 业务功能状态 | `[feature].store.ts`   | `use[Feature]Store` | `features/auth/model/auth.store.ts` |
-| 存储 Key     | 使用 `getStorageKey()` | -                   | `getStorageKey('auth')`             |
+| Store 类型   | 文件命名                | Hook 命名           | 示例                                |
+| ------------ | ----------------------- | ------------------- | ----------------------------------- |
+| 全局应用状态 | `app.store.ts`          | `useAppStore`       | `shared/stores/app.store.ts`        |
+| 业务功能状态 | `[feature].store.ts`    | `use[Feature]Store` | `features/auth/model/auth.store.ts` |
+| 存储 Key     | 统一使用 `STORAGE_KEYS` | -                   | `STORAGE_KEYS.AUTH`                 |
 
 ## 代码质量保障
 

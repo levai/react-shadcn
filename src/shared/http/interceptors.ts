@@ -2,9 +2,8 @@ import type { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axio
 import type { AxiosInstance } from 'axios'
 import axios from 'axios'
 import { env } from '@/shared/config'
-import { ROUTES } from '@/shared/constants'
+import { ROUTES, STORAGE_KEYS } from '@/shared/constants'
 import { getToken } from '@/shared/lib'
-import { AUTH_STORAGE_KEY } from '@/features/auth/model'
 
 /**
  * 扩展的请求配置（在拦截器中使用）
@@ -202,7 +201,7 @@ export function setupResponseInterceptor(api: AxiosInstance) {
 
       // 401 未授权 - 清除认证信息并跳转登录页
       if (error.response?.status === 401) {
-        localStorage.removeItem(AUTH_STORAGE_KEY)
+        localStorage.removeItem(STORAGE_KEYS.AUTH)
         // 避免在登录页重复跳转
         if (window.location.pathname !== ROUTES.LOGIN) {
           window.location.href = ROUTES.LOGIN

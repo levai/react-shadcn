@@ -151,9 +151,7 @@ changeLanguage('en-US')
 // 位置：src/features/[feature]/model/[feature].store.ts
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { getStorageKey } from '@/shared/config'
-
-const AUTH_STORAGE_KEY = getStorageKey('auth')
+import { STORAGE_KEYS } from '@/shared/constants'
 
 interface AuthState {
   user: User | null
@@ -191,7 +189,7 @@ export const useAuthStore = create<AuthState>()(
       setLoading: isLoading => set({ isLoading }),
     }),
     {
-      name: AUTH_STORAGE_KEY,
+      name: STORAGE_KEYS.AUTH,
       // 只持久化必要状态
       partialize: state => ({
         user: state.user,
@@ -288,6 +286,34 @@ navigate(ROUTES.HOME)
 
 // ❌ 错误
 navigate('/')
+```
+
+### 存储 Key 管理
+
+**统一使用 `STORAGE_KEYS`，禁止硬编码存储 key：**
+
+```typescript
+import { STORAGE_KEYS } from '@/shared/constants'
+
+// ✅ 正确：使用统一的存储 key
+localStorage.getItem(STORAGE_KEYS.AUTH)
+localStorage.removeItem(STORAGE_KEYS.I18N)
+
+// ❌ 错误：硬编码存储 key
+localStorage.getItem('app:auth')
+localStorage.getItem(getStorageKey('auth'))
+```
+
+**添加新存储 key：**
+
+在 `src/shared/constants/storage.ts` 中添加：
+
+```typescript
+export const STORAGE_KEYS = {
+  I18N: getStorageKey('i18n'),
+  AUTH: getStorageKey('auth'),
+  [NEW_KEY]: getStorageKey('[name]'), // 新增
+} as const
 ```
 
 **路由保护：**
@@ -442,9 +468,10 @@ docs: update development guidelines
 5. ✅ 始终使用 i18n
 6. ✅ 使用 `useRequest` 进行数据请求
 7. ✅ 使用 ROUTES 常量
-8. ✅ 使用 toast (sonner)
-9. ✅ 使用 lucide-react 图标
-10. ✅ 遵循 FSD 架构
+8. ✅ 使用 STORAGE_KEYS 管理存储 key
+9. ✅ 使用 toast (sonner)
+10. ✅ 使用 lucide-react 图标
+11. ✅ 遵循 FSD 架构
 
 ## 详细规范文档
 
