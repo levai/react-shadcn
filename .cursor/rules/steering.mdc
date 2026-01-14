@@ -1,15 +1,21 @@
 ---
 alwaysApply: true
-description: 项目核心开发规范和架构指导原则
+description: 项目核心开发规范和架构指导原则（前后端）
 ---
 
 # 项目开发规范
 
-> 📖 **详细规范**: 完整规范请查看 [`docs/rules/ai-instructions.md`](../../docs/rules/ai-instructions.md)
+> 📖 **详细规范**：
+> - 前端：查看 [`frontend/docs/rules/ai-instructions.md`](../../frontend/docs/rules/ai-instructions.md)
+> - 后端：查看 [`backend/docs/rules/ai-instructions.md`](../../backend/docs/rules/ai-instructions.md)
 
-本项目使用 **Feature-Sliced Design (FSD)** 架构，专为 AI 辅助编程优化。
+本项目是**前后端分离**架构，前端使用 **Feature-Sliced Design (FSD)**，后端使用**分层架构**模式。
 
-## 技术栈
+---
+
+## 🎨 前端规范
+
+### 前端技术栈
 
 - React 19 + TypeScript 5.9
 - Vite 7 + Tailwind CSS 4
@@ -21,9 +27,9 @@ description: 项目核心开发规范和架构指导原则
 - sonner (Toast 通知)
 - lucide-react (图标库)
 
-## 目录结构
+### 前端目录结构
 
-```
+```typescript
 src/
 ├── app/              # 应用层：入口、Provider、布局
 ├── features/         # 功能层：业务功能模块
@@ -37,9 +43,9 @@ src/
 └── routes/           # 路由配置
 ```
 
-## 核心规则
+### 前端核心规则
 
-### 路径别名
+#### 路径别名
 
 **必须使用 `@/` 前缀，禁止相对路径：**
 
@@ -52,7 +58,7 @@ import { cn } from '@/shared/lib'
 import { LoginForm } from '../../features/auth'
 ```
 
-### 导入规则
+#### 导入规则
 
 1. **从 feature 的 `index.ts` 导入**，不要导入内部文件
 2. **使用具名导入**，避免 `import *`
@@ -67,24 +73,7 @@ import { useRequest } from '@/shared/hooks'
 import { LoginForm } from '@/features/auth/ui/LoginForm'
 ```
 
-### 组件模式
-
-**页面组件：**
-```typescript
-const LoginPage = () => {
-  return <div>...</div>
-}
-export default LoginPage
-```
-
-**功能组件：**
-```typescript
-export function LoginForm({ onSubmit }: Props) {
-  return <form>...</form>
-}
-```
-
-### 数据请求
+#### 数据请求
 
 **统一使用 `useRequest` Hook：**
 
@@ -97,7 +86,7 @@ const { data, loading, error } = useRequest(
 )
 ```
 
-### 国际化
+#### 国际化
 
 **必须使用 i18n，禁止硬编码文本：**
 
@@ -108,17 +97,17 @@ const { t } = useTranslation('common')
 return <div>{t('actions.confirm')}</div>
 ```
 
-### 路由
+#### 路由
 
 **使用 ROUTES 常量，禁止硬编码路径：**
 
 ```typescript
 import { ROUTES } from '@/shared/constants'
 navigate(ROUTES.HOME)  // ✅ 正确
-navigate('/')           // ❌ 错误
+navigate('/')          // ❌ 错误
 ```
 
-### 样式
+#### 样式
 
 **使用 `cn()` 工具函数：**
 
@@ -134,7 +123,7 @@ className="bg-primary text-primary-foreground"  // ✅ 正确
 className="bg-[#05C79A]"                        // ❌ 错误
 ```
 
-### 图标和通知
+#### 图标和通知
 
 **统一使用：**
 - 图标：`lucide-react`
@@ -148,7 +137,143 @@ import { toast } from 'sonner'
 toast.success('操作成功')
 ```
 
-## 关键规则总结
+---
+
+## ⚙️ 后端规范
+
+### 后端技术栈
+
+- FastAPI 0.128+ (Web 框架)
+- SQLAlchemy 2.0.45+ (ORM)
+- Pydantic 2.12+ (数据验证)
+- Python 3.12+ (编程语言)
+- structlog 25.5+ (结构化日志)
+- python-jose 3.5+ (JWT 认证)
+- Alembic 1.15+ (数据库迁移)
+- Uvicorn 0.40+ (ASGI 服务器)
+
+### 后端目录结构
+
+```python
+app/
+├── api/              # API 路由层（Controller）
+│   └── v1/
+├── services/         # 业务逻辑层（Service）
+├── repositories/     # 数据访问层（Repository）⭐
+├── models/           # 数据模型层（ORM Model）
+├── schemas/          # 数据验证层（Schema）
+├── core/             # 核心配置
+│   └── unit_of_work.py  # Unit of Work ⭐
+├── middleware/       # 中间件
+└── utils/            # 工具函数
+```
+
+### 后端核心规则
+
+#### 后端分层架构
+
+**必须遵循分层架构原则：**
+
+```python
+Router (API Layer)      # 只处理 HTTP 请求/响应
+    ↓
+Service (Business Logic) # 业务逻辑处理
+    ↓
+Unit of Work            # 事务管理 ⭐
+    ↓
+Repository              # 数据访问抽象 ⭐
+    ↓
+Model (ORM)             # 数据库模型
+    ↓
+Database
+```
+
+#### 后端导入规则
+
+**必须使用绝对导入，禁止相对路径：**
+
+```python
+# ✅ 正确
+from app.services.auth_service import AuthService
+from app.core.dependencies import get_auth_service
+
+# ❌ 错误
+from ..services.auth_service import AuthService
+```
+
+#### 后端服务层规范
+
+**业务逻辑必须在服务层，禁止在路由层：**
+
+```python
+# ✅ 正确：路由层只处理 HTTP
+@router.post("/login")
+async def login(
+    login_data: UserLogin,
+    auth_service: AuthService = Depends(get_auth_service),
+):
+    return auth_service.login(login_data.username, login_data.password)
+
+# ❌ 错误：业务逻辑在路由层
+@router.post("/login")
+async def login(login_data: UserLogin, db: Session = Depends(get_db)):
+    user = db.query(User).filter(...).first()  # ❌
+```
+
+#### 后端异常处理规范
+
+**必须使用自定义异常类，禁止直接抛出 HTTPException：**
+
+```python
+# ✅ 正确
+from app.core.exceptions import NotFoundError
+
+def get_user(self, user_id: str):
+    if not user:
+        raise NotFoundError("用户不存在")
+
+# ❌ 错误
+from fastapi import HTTPException
+raise HTTPException(status_code=404, detail="用户不存在")  # ❌
+```
+
+#### 后端统一响应格式
+
+**所有 API 响应（除登录接口外）使用统一格式：**
+
+```json
+{
+  "code": HTTP状态码（200表示成功，其他表示错误）,
+  "message": "响应消息（可选）",
+  "data": "响应数据（成功时为数据，错误时为 null）"
+}
+```
+
+**成功响应示例：**
+
+```json
+{
+  "code": 200,
+  "message": "操作成功",
+  "data": {...}
+}
+```
+
+**错误响应示例：**
+
+```json
+{
+  "code": 401,
+  "message": "认证失败",
+  "data": null
+}
+```
+
+---
+
+## 📋 关键规则总结
+
+### 前端
 
 1. ✅ 使用 `@/` 路径别名
 2. ✅ 从 feature 的 `index.ts` 导入
@@ -161,7 +286,25 @@ toast.success('操作成功')
 9. ✅ 使用 lucide-react 图标
 10. ✅ 遵循 FSD 架构
 
-## 详细规范
+### 后端
+
+1. ✅ 遵循分层架构（Router → Service → Unit of Work → Repository → Model）
+2. ✅ 业务逻辑在服务层，路由层只处理 HTTP
+3. ✅ 使用 Repository Pattern，禁止服务层直接使用 ORM ⭐
+4. ✅ 使用 Unit of Work Pattern 管理事务 ⭐
+5. ✅ 使用自定义异常类，禁止直接抛出 HTTPException
+6. ✅ 统一响应格式：`{"code": HTTP状态码, "message": "...", "data": ...}` ⭐
+7. ✅ 使用依赖注入获取服务
+8. ✅ 使用 Pydantic Schema 进行数据验证
+9. ✅ 使用类型提示
+10. ✅ 在服务层记录日志
+11. ✅ 使用绝对导入
+
+---
+
+## 📚 详细规范
 
 **统一规范源文件（包含所有文档链接）：**
-- **[AI 编程助手统一规范](../../docs/rules/ai-instructions.md)** - 所有详细规则、代码示例和完整文档列表（**唯一维护源**）
+
+- **前端**：[AI 编程助手统一规范](../../frontend/docs/rules/ai-instructions.md) - 所有详细规则、代码示例和完整文档列表（**唯一维护源**）
+- **后端**：[AI 编程助手统一规范](../../backend/docs/rules/ai-instructions.md) - 所有详细规则、代码示例和完整文档列表（**唯一维护源**）
