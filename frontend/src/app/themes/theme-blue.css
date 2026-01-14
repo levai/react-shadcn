@@ -1,0 +1,37 @@
+/* 自定义蓝色主题 */
+.theme-blue {
+  /* 蓝色主题 - 基础色 */
+  --background: 210 30% 7%; /* #0A0E13 */
+  --foreground: 220 10% 91%; /* #E5E7EB */
+
+  /* 卡片和弹出层 */
+  --card: 220 25% 10%; /* #111827 */
+  --card-foreground: 220 10% 91%; /* #E5E7EB */
+  --popover: 220 25% 10%; /* #111827 */
+  --popover-foreground: 220 10% 91%; /* #E5E7EB */
+
+  /* 主色 - 蓝色系 */
+  --primary: 217 91% 60%; /* #1890FF - Ant Design 蓝色 */
+  --primary-foreground: 0 0% 100%; /* #FFFFFF */
+
+  /* 次要色 - 深蓝色 */
+  --secondary: 217 91% 35%; /* #0050B3 - 深蓝色 */
+  --secondary-foreground: 0 0% 100%; /* #FFFFFF */
+
+  /* 静音色 */
+  --muted: 220 25% 10%; /* #111827 */
+  --muted-foreground: 210 10% 60%; /* #8899A6 */
+
+  /* 强调色 - 蓝色系 */
+  --accent: 217 91% 35%; /* #0050B3 - 深蓝色 */
+  --accent-foreground: 0 0% 100%; /* #FFFFFF */
+
+  /* 危险色 */
+  --destructive: 0 100% 64%; /* #FF4747 */
+  --destructive-foreground: 0 0% 100%; /* #FFFFFF */
+
+  /* 边框和输入 */
+  --border: 217 30% 25%; /* #2A3B47 - 带蓝色调的边框 */
+  --input: 217 30% 25%; /* #2A3B47 */
+  --ring: 217 91% 60%; /* #1890FF - 蓝色聚焦环 */
+}

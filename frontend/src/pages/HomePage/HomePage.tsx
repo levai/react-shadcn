@@ -1,4 +1,7 @@
 import { useTranslation } from '@/shared/i18n'
+import { Card, Row, Col, Typography } from 'antd'
+
+const { Title, Paragraph } = Typography
 
 /**
  * 首页
@@ -40,24 +43,33 @@ const HomePage = () => {
   ]
 
   return (
-    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+    <div className="space-y-6">
       {/* Welcome Card */}
-      <div className="col-span-full p-6 bg-card rounded-lg border">
-        <h2 className="text-2xl font-bold mb-2">{t('homePage.welcome.title')}</h2>
-        <p className="text-muted-foreground">{t('homePage.welcome.description')}</p>
-      </div>
+      <Card>
+        <Title level={2} className="mb-2">
+          {t('homePage.welcome.title')}
+        </Title>
+        <Paragraph className="text-muted-foreground mb-0">
+          {t('homePage.welcome.description')}
+        </Paragraph>
+      </Card>
 
       {/* Feature Cards */}
-      {features.map(feature => (
-        <div
-          key={feature.titleKey}
-          className="p-6 bg-card rounded-lg border hover:shadow-md transition-shadow"
-        >
-          <div className="text-3xl mb-3">{feature.icon}</div>
-          <h3 className="font-semibold mb-2">{feature.titleKey}</h3>
-          <p className="text-sm text-muted-foreground">{feature.descriptionKey}</p>
-        </div>
-      ))}
+      <Row gutter={[16, 16]}>
+        {features.map(feature => (
+          <Col xs={24} sm={12} lg={8} key={feature.titleKey}>
+            <Card hoverable>
+              <div className="text-3xl mb-3">{feature.icon}</div>
+              <Title level={4} className="mb-2">
+                {feature.titleKey}
+              </Title>
+              <Paragraph className="text-sm text-muted-foreground mb-0">
+                {feature.descriptionKey}
+              </Paragraph>
+            </Card>
+          </Col>
+        ))}
+      </Row>
     </div>
   )
 }

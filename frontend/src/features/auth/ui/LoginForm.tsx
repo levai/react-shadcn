@@ -6,8 +6,7 @@ import { useAuthStore } from '../model'
 import { authService } from '../api'
 import { ROUTES } from '@/shared/constants'
 
-import { Button, Input, Label } from '@/shared/ui'
-import { Loader2 } from 'lucide-react'
+import { Button, Input, Form } from 'antd'
 
 /**
  * 登录表单组件
@@ -17,18 +16,14 @@ export function LoginForm() {
   const { login } = useAuthStore()
   // 加载多个命名空间：auth 作为默认，common 作为辅助
   const { t } = useTranslation(['auth', 'common'])
+  const [form] = Form.useForm()
   const [isLoading, setIsLoading] = useState(false)
-  const [formData, setFormData] = useState({
-    username: 'admin',
-    password: 'admin123', // 后端默认密码
-  })
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleSubmit = async (values: { username: string; password: string }) => {
     setIsLoading(true)
 
     try {
-      const response = await authService.login(formData)
+      const response = await authService.login(values)
 
       // 先临时保存 token 到 store，这样后续请求会自动带上 Authorization 头
       // 使用 setState 直接更新状态（Zustand 允许在非组件中这样做）
@@ -59,36 +54,38 @@ export function LoginForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 w-full max-w-sm">
-      <div className="space-y-2">
-        <Label htmlFor="username">{t('form.username')}</Label>
-        <Input
-          id="username"
-          value={formData.username}
-          onChange={e => setFormData({ ...formData, username: e.target.value })}
-          placeholder="请输入名称"
-          required
-          disabled={isLoading}
-        />
-      </div>
+    <Form
+      form={form}
+      layout="vertical"
+      onFinish={handleSubmit}
+      autoComplete="off"
+      initialValues={{
+        username: 'admin',
+        password: 'admin123', // 后端默认密码
+      }}
+      className="w-full max-w-sm"
+    >
+      <Form.Item
+        name="username"
+        label={t('form.username')}
+        rules={[{ required: true, message: t('form.username') + t('common:required') }]}
+      >
+        <Input placeholder="请输入名称" disabled={isLoading} />
+      </Form.Item>
 
-      <div className="space-y-2">
-        <Label htmlFor="password">{t('form.password')}</Label>
-        <Input
-          id="password"
-          type="password"
-          value={formData.password}
-          onChange={e => setFormData({ ...formData, password: e.target.value })}
-          placeholder="请输入密码"
-          required
-          disabled={isLoading}
-        />
-      </div>
+      <Form.Item
+        name="password"
+        label={t('form.password')}
+        rules={[{ required: true, message: t('form.password') + t('common:required') }]}
+      >
+        <Input.Password placeholder="请输入密码" disabled={isLoading} />
+      </Form.Item>
 
-      <Button type="submit" className="w-full" disabled={isLoading}>
-        {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-        {isLoading ? t('common:status.loading') : t('login')}
-      </Button>
-    </form>
+      <Form.Item>
+        <Button type="primary" htmlType="submit" block loading={isLoading}>
+          {!isLoading && t('login')}
+        </Button>
+      </Form.Item>
+    </Form>
   )
 }

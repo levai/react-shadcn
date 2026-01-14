@@ -6,7 +6,7 @@ import { useTranslation } from '@/shared/i18n'
 import { ROUTE_TITLE_MAP } from '@/shared/constants'
 import { menuRoutes, type AppRouteConfig } from '@/routes'
 import { cn } from '@/shared/lib'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, TooltipArrow } from '@/shared/ui'
+import { Tooltip } from 'antd'
 
 // 导航项类型
 type NavItemType = {
@@ -67,15 +67,9 @@ const SidebarNavItem = memo(function SidebarNavItem({
 
   if (isCollapsed) {
     return (
-      <TooltipProvider delayDuration={300}>
-        <Tooltip>
-          <TooltipTrigger asChild>{content}</TooltipTrigger>
-          <TooltipContent side="right" sideOffset={6}>
-            {item.label}
-            <TooltipArrow />
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
+      <Tooltip title={item.label} placement="right" mouseEnterDelay={0.3}>
+        {content}
+      </Tooltip>
     )
   }
 
@@ -356,36 +350,30 @@ function Sidebar() {
       <div
         className={cn('py-3 border-t border-border/50 shrink-0', isCollapsed ? 'px-1.5' : 'px-2')}
       >
-        <TooltipProvider delayDuration={300}>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <button
-                onClick={handleToggle}
-                className={cn(
-                  'flex items-center rounded-lg transition-all duration-150',
-                  'text-muted-foreground hover:text-foreground hover:bg-card/80',
-                  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
-                  isCollapsed ? 'h-11 w-11 justify-center mx-auto' : 'h-10 w-full px-3 gap-3'
-                )}
-              >
-                {isCollapsed ? (
-                  <PanelLeft className="h-5 w-5" />
-                ) : (
-                  <>
-                    <PanelLeftClose className="h-5 w-5 shrink-0" />
-                    <span className="text-sm font-medium">{t('sidebar.collapseMenu')}</span>
-                  </>
-                )}
-              </button>
-            </TooltipTrigger>
-            {isCollapsed && (
-              <TooltipContent side="right" sideOffset={6}>
-                {t('sidebar.expandMenuShortcut')}
-                <TooltipArrow />
-              </TooltipContent>
+        <Tooltip
+          title={isCollapsed ? t('sidebar.expandMenuShortcut') : undefined}
+          placement="right"
+          mouseEnterDelay={0.3}
+        >
+          <button
+            onClick={handleToggle}
+            className={cn(
+              'flex items-center rounded-lg transition-all duration-150',
+              'text-muted-foreground hover:text-foreground hover:bg-card/80',
+              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
+              isCollapsed ? 'h-11 w-11 justify-center mx-auto' : 'h-10 w-full px-3 gap-3'
             )}
-          </Tooltip>
-        </TooltipProvider>
+          >
+            {isCollapsed ? (
+              <PanelLeft className="h-5 w-5" />
+            ) : (
+              <>
+                <PanelLeftClose className="h-5 w-5 shrink-0" />
+                <span className="text-sm font-medium">{t('sidebar.collapseMenu')}</span>
+              </>
+            )}
+          </button>
+        </Tooltip>
       </div>
     </aside>
   )

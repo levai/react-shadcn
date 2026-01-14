@@ -1,0 +1,37 @@
+/* 深色模式 - 战术主题色 */
+.dark {
+  /* 战术主题色 - 基础色 */
+  --background: 210 30% 7%; /* #0A0E13 */
+  --foreground: 220 10% 91%; /* #E5E7EB */
+
+  /* 卡片和弹出层 */
+  --card: 220 25% 10%; /* #111827 */
+  --card-foreground: 220 10% 91%; /* #E5E7EB */
+  --popover: 220 25% 10%; /* #111827 */
+  --popover-foreground: 220 10% 91%; /* #E5E7EB */
+
+  /* 主色 */
+  --primary: 165 95% 40%; /* #05C79A */
+  --primary-foreground: 0 0% 100%; /* #FFFFFF */
+
+  /* 次要色 */
+  --secondary: 165 95% 25%; /* #037d61 */
+  --secondary-foreground: 0 0% 100%; /* #FFFFFF */
+
+  /* 静音色 */
+  --muted: 220 25% 10%; /* #111827 */
+  --muted-foreground: 210 10% 60%; /* #8899A6 */
+
+  /* 强调色 */
+  --accent: 165 95% 25%; /* #037d61 */
+  --accent-foreground: 0 0% 100%; /* #FFFFFF */
+
+  /* 危险色 */
+  --destructive: 0 100% 64%; /* #FF4747 */
+  --destructive-foreground: 0 0% 100%; /* #FFFFFF */
+
+  /* 边框和输入 */
+  --border: 200 25% 22%; /* #2A3B47 */
+  --input: 200 25% 22%; /* #2A3B47 */
+  --ring: 165 95% 40%; /* #05C79A */
+}

@@ -1,16 +1,32 @@
 import { ErrorBoundary } from 'react-error-boundary'
-import { Button } from '@/shared/ui'
+import { Result, Button, Typography } from 'antd'
+
+const { Paragraph, Text } = Typography
 
 function ErrorFallback({ error }: { error: Error }) {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-destructive/10">
-      <div className="text-center p-8">
-        <h1 className="text-2xl font-bold text-destructive mb-4">应用发生错误</h1>
-        <pre className="text-sm text-muted-foreground bg-muted p-4 rounded-md">{error.message}</pre>
-        <div className="mt-4">
-          <Button onClick={() => window.location.reload()}>刷新页面</Button>
+    <div className="min-h-screen flex items-center justify-center">
+      <Result
+        status="error"
+        title="应用发生错误"
+        subTitle="抱歉，应用遇到了一个错误。请刷新页面重试。"
+        extra={[
+          <Button type="primary" key="reload" onClick={() => window.location.reload()}>
+            刷新页面
+          </Button>,
+        ]}
+      >
+        <div className="text-left">
+          <Paragraph>
+            <Text strong>错误详情：</Text>
+          </Paragraph>
+          <Paragraph>
+            <pre className="text-xs bg-muted p-3 rounded-md overflow-auto max-w-2xl">
+              {error.message}
+            </pre>
+          </Paragraph>
         </div>
-      </div>
+      </Result>
     </div>
   )
 }
