@@ -96,6 +96,15 @@ export {
 } from './table'
 export { ScrollArea, ScrollBar } from './scroll-area'
 export {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from './pagination'
+export {
   useFormField,
   Form,
   FormItem,

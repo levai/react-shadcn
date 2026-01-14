@@ -5,11 +5,12 @@ import { env } from '@/shared/config'
 import { ROUTES } from '@/shared/constants'
 import { MainLayout, AuthLayout } from '@/app/layouts'
 import { ProtectedRoute } from '@/features/auth'
-import { Home, LayoutDashboard, Settings, type LucideIcon } from 'lucide-react'
+import { Home, LayoutDashboard, Settings, Users, type LucideIcon } from 'lucide-react'
 
 // 路由组件懒加载
 const HomePage = lazy(() => import('@/pages/HomePage'))
 const LoginPage = lazy(() => import('@/pages/LoginPage'))
+const UserManagementPage = lazy(() => import('@/pages/UserManagementPage'))
 
 // 扩展路由配置类型，用于侧边栏生成
 export type AppRouteConfig = RouteObject & {
@@ -45,6 +46,17 @@ export const menuRoutes: AppRouteConfig[] = [
     element: (
       <ProtectedRoute>
         <div className="p-4">Dashboard Placeholder</div>
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: ROUTES.USERS,
+    meta: { title: '', icon: Users }, // title 由 routeTitleMap 映射提供，这里留空作为后备
+    element: (
+      <ProtectedRoute>
+        <LazyLoad>
+          <UserManagementPage />
+        </LazyLoad>
       </ProtectedRoute>
     ),
   },

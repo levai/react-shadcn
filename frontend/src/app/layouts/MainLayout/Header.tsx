@@ -1,7 +1,7 @@
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuthStore } from '@/features/auth'
 import { useAppStore } from '@/shared/stores'
-import { ROUTES } from '@/shared/constants'
+import { ROUTES, ROUTE_TITLE_MAP } from '@/shared/constants'
 import { useTranslation } from '@/shared/i18n'
 import {
   ThemeToggle,
@@ -28,16 +28,9 @@ export function Header() {
     navigate(ROUTES.LOGIN)
   }
 
-  // 路由路径到翻译键的映射
-  const routeTitleMap: Record<string, string> = {
-    '/': 'nav.home',
-    '/dashboard': 'nav.overview',
-    '/settings': 'nav.settings',
-  }
-
   // 获取当前页面标题
   const currentRoute = menuRoutes.find(route => route.path === location.pathname)
-  const translationKey = currentRoute?.path ? routeTitleMap[currentRoute.path] : null
+  const translationKey = currentRoute?.path ? ROUTE_TITLE_MAP[currentRoute.path] : null
   const pageTitle = translationKey
     ? t(translationKey)
     : currentRoute?.meta?.title || t('nav.dashboard')

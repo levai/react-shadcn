@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom'
 import { PanelLeftClose, PanelLeft, Layers, GripVertical } from 'lucide-react'
 import { useAppStore } from '@/shared/stores'
 import { useTranslation } from '@/shared/i18n'
+import { ROUTE_TITLE_MAP } from '@/shared/constants'
 import { menuRoutes, type AppRouteConfig } from '@/routes'
 import { cn } from '@/shared/lib'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, TooltipArrow } from '@/shared/ui'
@@ -215,13 +216,6 @@ const ResizeHandle = memo(function ResizeHandle({
   )
 })
 
-// 路由路径到翻译键的映射
-const routeTitleMap: Record<string, string> = {
-  '/': 'nav.home',
-  '/dashboard': 'nav.overview',
-  '/settings': 'nav.settings',
-}
-
 // 将路由配置转换为导航分组
 function convertRoutesToNavGroups(
   routes: AppRouteConfig[],
@@ -233,7 +227,7 @@ function convertRoutesToNavGroups(
   // 将所有菜单项放在一个默认分组中
   const items: NavItemType[] = visibleRoutes.map(route => {
     // 优先使用翻译键，如果没有映射则使用原始 title
-    const translationKey = routeTitleMap[route.path || '']
+    const translationKey = route.path ? ROUTE_TITLE_MAP[route.path] : undefined
     const label = translationKey ? t(translationKey) : route.meta?.title || route.path || ''
 
     return {
