@@ -15,6 +15,15 @@ interface ExtendedRequestConfig extends InternalAxiosRequestConfig {
 }
 
 /**
+ * 统一响应格式（后端返回的标准格式）
+ */
+interface UnifiedResponse<T = unknown> {
+  code: string | number
+  message?: string
+  data?: T
+}
+
+/**
  * HTTP 错误类型
  */
 export interface HttpError {
@@ -88,6 +97,46 @@ function createHttpError(error: AxiosError): HttpError {
 }
 
 /**
+ * 处理统一响应格式
+ * 如果响应格式为 { code: "200", data: {...}, message: "..." }，提取 data 字段
+ * @param responseData 响应数据
+ * @param httpStatus HTTP 状态码
+ * @returns 处理后的数据，如果是错误则抛出 HttpError
+ */
+function handleUnifiedResponse(responseData: unknown, httpStatus: number): unknown {
+  // 检查是否为统一响应格式
+  if (
+    responseData &&
+    typeof responseData === 'object' &&
+    'code' in responseData &&
+    'data' in responseData
+  ) {
+    const unifiedResponse = responseData as UnifiedResponse
+    const code = unifiedResponse.code
+
+    // 判断是否为成功状态码（"200" 或 200）
+    const isSuccess = code === '200' || code === 200
+
+    if (isSuccess) {
+      // 成功：直接返回 data 字段，简化使用
+      return unifiedResponse.data
+    } else {
+      // 失败：抛出错误
+      const httpError: HttpError = {
+        message: unifiedResponse.message || '请求失败',
+        code: String(code),
+        status: httpStatus,
+        data: unifiedResponse.data,
+      }
+      throw httpError
+    }
+  }
+
+  // 如果不是统一响应格式，直接返回原数据（兼容其他格式）
+  return responseData
+}
+
+/**
  * 请求拦截器 - 自动添加 Token 和日志
  */
 export function setupRequestInterceptor(api: AxiosInstance) {
@@ -102,16 +151,6 @@ export function setupRequestInterceptor(api: AxiosInstance) {
           // 使用 AxiosHeaders 的 set 方法（Axios 1.x 推荐方式）
           config.headers.set('Authorization', `Bearer ${token}`)
         }
-      }
-
-      // 开发环境请求日志
-      if (env.isDev) {
-        console.warn(`🚀 [HTTP Request] ${config.method?.toUpperCase()} ${config.url}`, {
-          baseURL: config.baseURL,
-          headers: config.headers,
-          data: config.data,
-          params: config.params,
-        })
       }
 
       return config
@@ -131,19 +170,17 @@ export function setupRequestInterceptor(api: AxiosInstance) {
 export function setupResponseInterceptor(api: AxiosInstance) {
   api.interceptors.response.use(
     (response: AxiosResponse) => {
-      // 开发环境响应日志
-      if (env.isDev) {
-        console.warn(
-          `✅ [HTTP Response] ${response.config.method?.toUpperCase()} ${response.config.url}`,
-          {
-            status: response.status,
-            data: response.data,
-          }
-        )
-      }
+      const responseData = response.data
 
-      // 直接返回 data，简化使用
-      return response.data
+      // 处理统一响应格式：{ code: "200", data: {...}, message: "..." }
+      try {
+        const result = handleUnifiedResponse(responseData, response.status)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        return result as any
+      } catch (error) {
+        // 如果是 HttpError，直接 reject
+        return Promise.reject(error)
+      }
     },
     (error: AxiosError) => {
       const extendedConfig = error.config as ExtendedRequestConfig | undefined
@@ -156,16 +193,6 @@ export function setupResponseInterceptor(api: AxiosInstance) {
           )
         }
         return Promise.reject(error)
-      }
-
-      // 开发环境错误日志
-      if (env.isDev) {
-        const method = error.config?.method?.toUpperCase()
-        const url = error.config?.url
-        console.error(`❌ [HTTP Error] ${method} ${url}`, error)
-        if (error.response) {
-          console.error('Response:', error.response.status, error.response.data)
-        }
       }
 
       // 如果跳过错误处理，直接返回原始错误
