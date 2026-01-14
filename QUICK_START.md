@@ -4,21 +4,43 @@
 
 ### 1. 启动后端服务
 
+#### macOS/Linux
+
 ```bash
 cd backend
 
 # 激活虚拟环境
-source venv/bin/activate  # macOS/Linux
-# 或
-venv\Scripts\activate  # Windows
+source venv/bin/activate
 
 # 如果还没初始化数据库
-PYTHONPATH=$(pwd) python app/db_init.py  # macOS/Linux
-# 或
-python -m app.db_init  # Windows
+PYTHONPATH=$(pwd) python app/db_init.py
+# 或使用模块方式
+python -m app.db_init
 
 # 启动服务
 python run.py
+```
+
+#### Windows
+
+```powershell
+# 进入后端目录
+cd backend
+
+# 激活虚拟环境
+venv\Scripts\activate
+
+# 如果还没初始化数据库
+python -m app.db_init
+
+# 启动服务
+python run.py
+```
+
+**注意**：Windows 上如果遇到 `python: command not found`，请使用 `py` 命令替代：
+```powershell
+py -m app.db_init
+py run.py
 ```
 
 后端服务将在 `http://localhost:8000` 启动。
@@ -26,6 +48,8 @@ python run.py
 **验证后端**：访问 http://localhost:8000/docs 查看 API 文档
 
 ### 2. 启动前端服务
+
+前端启动方式在 macOS/Linux 和 Windows 上相同：
 
 ```bash
 cd frontend
@@ -35,6 +59,17 @@ pnpm install
 
 # 启动开发服务器
 pnpm dev
+```
+
+**注意**：如果 Windows 上没有安装 `pnpm`，可以使用 `npm` 或 `yarn`：
+```powershell
+# 使用 npm
+npm install
+npm run dev
+
+# 或使用 yarn
+yarn install
+yarn dev
 ```
 
 前端服务将在 `http://localhost:5178` 启动。
@@ -179,6 +214,21 @@ pnpm dev
 - 确认使用正确的账号：`admin` / `admin123`
 - 检查后端数据库是否已初始化
 - 查看后端日志确认错误信息
+
+### 5. Windows 特定问题
+
+**问题**：Windows 上无法激活虚拟环境
+
+**解决**：
+- 确保使用 PowerShell 或 CMD（不是 Git Bash）
+- 如果遇到执行策略错误，运行：`Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser`
+- 使用完整路径：`.\venv\Scripts\activate`
+
+**问题**：Windows 上 `python` 命令不可用
+
+**解决**：
+- 使用 `py` 命令替代：`py -m app.db_init`、`py run.py`
+- 或使用完整路径：`C:\Python3x\python.exe`
 
 ## 开发建议
 
