@@ -29,11 +29,12 @@ export default defineConfig(({ mode }) => {
     server: {
       port: 5178,
       host: true,
-      // 代理配置模板
       proxy: {
         '/api': {
-          target: 'http://localhost:8000',
-          changeOrigin: true,
+          target: 'http://192.168.1.79:8080',
+          changeOrigin: true, // 改变请求头中的 origin，解决跨域问题
+          // 后端 API 路径是 /v1/xxx（没有 /api 前缀），需要移除 /api
+          rewrite: path => path.replace(/^\/api/, ''),
         },
       },
     },
