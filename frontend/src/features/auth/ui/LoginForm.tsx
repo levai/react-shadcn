@@ -20,7 +20,7 @@ export function LoginForm() {
   const [isLoading, setIsLoading] = useState(false)
   const [formData, setFormData] = useState({
     username: 'admin',
-    password: '123456',
+    password: 'admin123', // 后端默认密码
   })
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -29,12 +29,30 @@ export function LoginForm() {
 
     try {
       const response = await authService.login(formData)
-      // const user = await authService.getCurrentUser()
-      login(null as any, response.token)
+
+      // 先临时保存 token 到 store，这样后续请求会自动带上 Authorization 头
+      // 使用 setState 直接更新状态（Zustand 允许在非组件中这样做）
+      useAuthStore.setState({
+        accessToken: response.access_token,
+        isLoading: false,
+      })
+
+      // 登录成功后获取用户信息（此时请求会自动带上 token）
+      const user = await authService.getCurrentUser()
+
+      // 保存完整的用户信息和 token
+      login(user, response.access_token)
+
       toast.success(t('messages.loginSuccess'))
       navigate(ROUTES.HOME)
-    } catch {
-      toast.error(t('messages.loginFailed'))
+    } catch (error: unknown) {
+      const errorMessage =
+        error && typeof error === 'object' && 'message' in error
+          ? String(error.message)
+          : t('messages.loginFailed')
+      toast.error(errorMessage)
+      // 登录失败时清除可能已保存的 token
+      useAuthStore.getState().logout()
     } finally {
       setIsLoading(false)
     }

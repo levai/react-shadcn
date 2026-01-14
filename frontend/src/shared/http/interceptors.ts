@@ -40,14 +40,13 @@ export interface HttpError {
  * 格式化错误消息
  */
 function formatErrorMessage(error: AxiosError): string {
-  // 优先使用后端返回的错误消息
+  // 后端统一错误格式：{ "error": { "code": "...", "message": "..." } }
   const responseData = error.response?.data as
-    | { message?: string; error?: string; msg?: string }
+    | { error?: { code?: string; message?: string } }
     | undefined
 
-  if (responseData?.message) return responseData.message
-  if (responseData?.error) return responseData.error
-  if (responseData?.msg) return responseData.msg
+  // 优先使用后端返回的 error.message 字段（业界标准格式）
+  if (responseData?.error?.message) return responseData.error.message
 
   // 根据状态码返回默认消息
   const status = error.response?.status
@@ -85,12 +84,14 @@ function formatErrorMessage(error: AxiosError): string {
  * 创建标准化的 HTTP 错误对象
  */
 function createHttpError(error: AxiosError): HttpError {
-  const responseData = error.response?.data as { code?: string } | undefined
+  const responseData = error.response?.data as
+    | { error?: { code?: string; message?: string } }
+    | undefined
 
   return {
     message: formatErrorMessage(error),
     status: error.response?.status,
-    code: responseData?.code || error.code,
+    code: responseData?.error?.code || error.code,
     data: error.response?.data,
   }
 }

@@ -74,7 +74,7 @@ export function Header() {
               <div className="flex items-center justify-start gap-2 p-2">
                 <div className="flex flex-col space-y-1 leading-none">
                   <p className="font-medium">{user.name}</p>
-                  <p className="truncate text-xs text-muted-foreground">{user.email}</p>
+                  <p className="truncate text-xs text-muted-foreground">{user.username}</p>
                 </div>
               </div>
               <DropdownMenuItem

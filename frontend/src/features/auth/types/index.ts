@@ -7,9 +7,13 @@
 /** 用户信息 */
 export interface User {
   id: string
+  username: string
   name: string
-  avatar?: string
+  avatar?: string | null
+  is_active: boolean
   roles?: string[]
+  created_at?: string
+  updated_at?: string
 }
 
 /** 登录请求 */
@@ -18,8 +22,10 @@ export interface LoginRequest {
   password: string
 }
 
-/** 登录响应（后端返回的 data 字段内容） */
+/** 登录响应（业界标准格式） */
 export interface LoginResponse {
-  token: string
-  expireTime: number | null
+  access_token: string
+  token_type: string
+  expires_in: number | null
+  refresh_token?: string | null
 }

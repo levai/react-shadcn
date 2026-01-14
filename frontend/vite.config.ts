@@ -31,10 +31,10 @@ export default defineConfig(({ mode }) => {
       host: true,
       proxy: {
         '/api': {
-          target: 'http://192.168.1.79:8080',
+          target: 'http://localhost:8000',
           changeOrigin: true, // 改变请求头中的 origin，解决跨域问题
-          // 后端 API 路径是 /v1/xxx（没有 /api 前缀），需要移除 /api
-          rewrite: path => path.replace(/^\/api/, ''),
+          // 后端 API 路径是 /api/v1/xxx，不需要重写路径
+          // rewrite: path => path.replace(/^\/api/, ''),
         },
       },
     },
