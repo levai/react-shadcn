@@ -9,6 +9,7 @@ export default {
     home: '首页',
     dashboard: '仪表盘',
     overview: '概览',
+    users: '用户管理',
     settings: '设置',
     profile: '个人资料',
   },

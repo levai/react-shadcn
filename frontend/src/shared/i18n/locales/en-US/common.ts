@@ -25,6 +25,20 @@ export default {
     finish: 'Finish',
     close: 'Close',
     open: 'Open',
+    create: 'Create',
+    update: 'Update',
+    createUser: 'Create User',
+    editUser: 'Edit User',
+    activate: 'Activate',
+    deactivate: 'Deactivate',
+    activateSuccess: 'Activated successfully',
+    deactivateSuccess: 'Deactivated successfully',
+    createSuccess: 'Created successfully',
+    updateSuccess: 'Updated successfully',
+    deleteSuccess: 'Deleted successfully',
+    operationFailed: 'Operation failed',
+    confirmDelete: 'Are you sure you want to delete {{name}}?',
+    label: 'Actions',
   },
 
   // Status
@@ -35,7 +49,24 @@ export default {
     warning: 'Warning',
     info: 'Info',
     noData: 'No data',
+    active: 'Active',
   },
+
+  // Common fields
+  username: 'Username',
+  password: 'Password',
+  name: 'Name',
+  avatar: 'Avatar',
+  avatarOptional: 'Avatar (Optional)',
+  avatarPlaceholder: 'https://example.com/avatar.jpg',
+  total: 'Total',
+  loading: 'Loading...',
+  errorOccurred: 'An error occurred',
+  inactive: 'Inactive',
+  userManagement: 'User Management',
+  optional: 'Optional',
+  statusLabel: 'Status',
+  createdAt: 'Created At',
 
   // Messages
   messages: {

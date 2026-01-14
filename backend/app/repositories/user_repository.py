@@ -2,6 +2,7 @@
 
 from typing import Optional
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 
 from app.models.user import User
 from app.repositories.base_repository import BaseRepository
@@ -38,3 +39,21 @@ class UserRepository(BaseRepository[User]):
             .limit(limit)
             .all()
         )
+
+    def get_all(
+        self, skip: int = 0, limit: int = 100, is_active: Optional[bool] = None
+    ) -> tuple[list[User], int]:
+        """获取用户列表（支持分页和过滤）"""
+        query = self.db.query(User)
+
+        # 根据 is_active 过滤
+        if is_active is not None:
+            query = query.filter(User.is_active == is_active)
+
+        # 获取总数
+        total = query.count()
+
+        # 分页查询
+        users = query.order_by(User.created_at.desc()).offset(skip).limit(limit).all()
+
+        return users, total

@@ -25,6 +25,20 @@ export default {
     finish: '完成',
     close: '关闭',
     open: '打开',
+    create: '创建',
+    update: '更新',
+    createUser: '创建用户',
+    editUser: '编辑用户',
+    activate: '激活',
+    deactivate: '停用',
+    activateSuccess: '激活成功',
+    deactivateSuccess: '停用成功',
+    createSuccess: '创建成功',
+    updateSuccess: '更新成功',
+    deleteSuccess: '删除成功',
+    operationFailed: '操作失败',
+    confirmDelete: '确认删除 {{name}} 吗？',
+    label: '操作',
   },
 
   // 状态
@@ -35,7 +49,24 @@ export default {
     warning: '警告',
     info: '提示',
     noData: '暂无数据',
+    active: '已激活',
   },
+
+  // 通用字段
+  username: '用户名',
+  password: '密码',
+  name: '姓名',
+  avatar: '头像',
+  avatarOptional: '头像（可选）',
+  avatarPlaceholder: 'https://example.com/avatar.jpg',
+  total: '总计',
+  loading: '加载中...',
+  errorOccurred: '发生错误',
+  inactive: '已停用',
+  userManagement: '用户管理',
+  optional: '可选',
+  statusLabel: '状态',
+  createdAt: '创建时间',
 
   // 消息提示
   messages: {

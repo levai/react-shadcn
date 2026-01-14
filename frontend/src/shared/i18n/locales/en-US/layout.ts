@@ -9,6 +9,7 @@ export default {
     home: 'Home',
     dashboard: 'Dashboard',
     overview: 'Overview',
+    users: 'User Management',
     settings: 'Settings',
     profile: 'Profile',
   },
