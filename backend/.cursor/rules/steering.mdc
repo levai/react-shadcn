@@ -1,0 +1,137 @@
+---
+alwaysApply: true
+description: 后端项目核心开发规范和架构指导原则
+---
+
+# 后端开发规范
+
+> 📖 **详细规范**: 完整规范请查看 [`docs/rules/ai-instructions.md`](../../docs/rules/ai-instructions.md)
+
+本项目使用 **分层架构** 模式，符合 FastAPI 和 Python 后端开发最佳实践。
+
+## 技术栈
+
+- FastAPI 0.128+ (Web 框架)
+- SQLAlchemy 2.0.45+ (ORM)
+- Pydantic 2.12+ (数据验证)
+- Python 3.12+ (编程语言)
+- structlog 25.5+ (结构化日志)
+- python-jose 3.5+ (JWT 认证)
+- Alembic 1.15+ (数据库迁移)
+- Uvicorn 0.40+ (ASGI 服务器)
+
+## 目录结构
+
+```
+app/
+├── api/              # API 路由层（Controller）
+│   └── v1/
+├── services/         # 业务逻辑层（Service）
+├── repositories/     # 数据访问层（Repository）⭐
+├── models/           # 数据模型层（ORM Model）
+├── schemas/          # 数据验证层（Schema）
+├── core/             # 核心配置
+│   └── unit_of_work.py  # Unit of Work ⭐
+├── middleware/       # 中间件
+└── utils/            # 工具函数
+```
+
+## 核心规则
+
+### 分层架构
+
+**必须遵循分层架构原则：**
+
+```
+Router (API Layer)      # 只处理 HTTP 请求/响应
+    ↓
+Service (Business Logic) # 业务逻辑处理
+    ↓
+Unit of Work            # 事务管理 ⭐
+    ↓
+Repository              # 数据访问抽象 ⭐
+    ↓
+Model (ORM)             # 数据库模型
+    ↓
+Database
+```
+
+### 导入规则
+
+**必须使用绝对导入，禁止相对路径：**
+
+```python
+# ✅ 正确
+from app.services.auth_service import AuthService
+from app.core.dependencies import get_auth_service
+
+# ❌ 错误
+from ..services.auth_service import AuthService
+```
+
+### 服务层规范
+
+**业务逻辑必须在服务层，禁止在路由层：**
+
+```python
+# ✅ 正确：路由层只处理 HTTP
+@router.post("/login")
+async def login(
+    login_data: UserLogin,
+    auth_service: AuthService = Depends(get_auth_service),
+):
+    return auth_service.login(login_data.username, login_data.password)
+
+# ❌ 错误：业务逻辑在路由层
+@router.post("/login")
+async def login(login_data: UserLogin, db: Session = Depends(get_db)):
+    user = db.query(User).filter(...).first()  # ❌
+```
+
+### 异常处理规范
+
+**必须使用自定义异常类，禁止直接抛出 HTTPException：**
+
+```python
+# ✅ 正确
+from app.core.exceptions import NotFoundError
+
+def get_user(self, user_id: str):
+    if not user:
+        raise NotFoundError("用户不存在")
+
+# ❌ 错误
+from fastapi import HTTPException
+raise HTTPException(status_code=404, detail="用户不存在")  # ❌
+```
+
+### 日志记录规范
+
+**在服务层使用日志：**
+
+```python
+from app.services.base_service import BaseService
+
+class MyService(BaseService):
+    def some_method(self):
+        self.logger.info("操作开始", user_id=123)
+        self.logger.error("操作失败", error=str(e))
+```
+
+## 关键规则总结
+
+1. ✅ 遵循分层架构（Router → Service → Unit of Work → Repository → Model）
+2. ✅ 业务逻辑在服务层，路由层只处理 HTTP
+3. ✅ 使用 Repository Pattern，禁止服务层直接使用 ORM ⭐
+4. ✅ 使用 Unit of Work Pattern 管理事务 ⭐
+5. ✅ 使用自定义异常类，禁止直接抛出 HTTPException
+6. ✅ 使用依赖注入获取服务
+7. ✅ 使用 Pydantic Schema 进行数据验证
+8. ✅ 使用类型提示
+9. ✅ 在服务层记录日志
+10. ✅ 使用绝对导入
+
+## 详细规范
+
+**统一规范源文件（包含所有文档链接）：**
+- **[AI 编程助手统一规范](../../docs/rules/ai-instructions.md)** - 所有详细规则、代码示例和完整文档列表（**唯一维护源**）
