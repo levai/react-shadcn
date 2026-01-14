@@ -132,7 +132,17 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
 // 位置：src/shared/stores/app.store.ts
 import { useAppStore } from '@/shared/stores'
 
-// 用于：侧边栏状态、全局 UI 偏好等
+// 用于：侧边栏状态、全局 UI 偏好、语言设置等
+```
+
+**语言状态管理：**
+
+```typescript
+// 位置：src/shared/stores/i18n.store.ts
+import { useI18nStore, SUPPORTED_LANGUAGES } from '@/shared/stores'
+
+const { language, changeLanguage } = useI18nStore()
+changeLanguage('en-US')
 ```
 
 **功能状态：**
@@ -337,6 +347,15 @@ t('nav.home')
 t('auth:loginPage.title')
 ```
 
+**语言切换：**
+
+```typescript
+import { useI18nStore } from '@/shared/stores'
+
+const { language, changeLanguage } = useI18nStore()
+changeLanguage('en-US') // ✅ 正确：通过 store 切换
+```
+
 **关键规则：**
 
 - 始终使用 i18n - 禁止硬编码用户可见文本
@@ -344,6 +363,7 @@ t('auth:loginPage.title')
 - 页面内容模式：`t('homePage.welcome.title')`
 - 命名空间：`common`（默认）、`auth`、`layout`、`home`
 - 从 `@/shared/i18n` 导入
+- 语言切换：使用 `useI18nStore().changeLanguage()`，不要直接调用 `i18n.changeLanguage()`
 
 ### 样式
 

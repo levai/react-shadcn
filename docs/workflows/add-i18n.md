@@ -83,12 +83,12 @@ export default {
 ```typescript
 import zhCN from './locales/zh-CN'
 import enUS from './locales/en-US'
-import frFR from './locales/fr-FR'  // 新增
+import frFR from './locales/fr-FR' // 新增
 
 i18n.init({
   // 添加到支持的语言列表
-  supportedLngs: ['zh-CN', 'en-US', 'fr-FR'],  // 新增 fr-FR
-  
+  supportedLngs: ['zh-CN', 'en-US', 'fr-FR'], // 新增 fr-FR
+
   // 添加到资源
   resources: {
     'zh-CN': {
@@ -101,7 +101,8 @@ i18n.init({
       auth: enUS.auth,
       layout: enUS.layout,
     },
-    'fr-FR': {  // 新增
+    'fr-FR': {
+      // 新增
       common: frFR.common,
       auth: frFR.auth,
       layout: frFR.layout,
@@ -134,17 +135,19 @@ declare module 'react-i18next' {
 
 **注意：** 类型定义只需要一个语言的资源作为类型源即可（通常使用默认语言）。
 
-#### 4. 更新语言切换组件
+#### 4. 更新语言列表
 
-在 `src/shared/ui/LanguageToggle.tsx` 中添加新语言选项：
+在 `src/shared/stores/i18n.store.ts` 中的 `SUPPORTED_LANGUAGES` 添加新语言：
 
 ```typescript
-const languages = [
+export const SUPPORTED_LANGUAGES: LanguageItem[] = [
   { code: 'zh-CN', label: '简体中文', flag: '🇨🇳' },
   { code: 'en-US', label: 'English', flag: '🇺🇸' },
-  { code: 'fr-FR', label: 'Français', flag: '🇫🇷' },  // 新增
-]
+  { code: 'fr-FR', label: 'Français', flag: '🇫🇷' }, // 新增
+] as const
 ```
+
+**注意：** `LanguageToggle` 组件会自动使用 `SUPPORTED_LANGUAGES`，无需手动更新。
 
 ## 添加新的命名空间
 
@@ -191,13 +194,13 @@ export default {
 import common from './common'
 import auth from './auth'
 import layout from './layout'
-import user from './user'  // 新增
+import user from './user' // 新增
 
 export default {
   common,
   auth,
   layout,
-  user,  // 新增
+  user, // 新增
 }
 ```
 
@@ -208,21 +211,21 @@ export default {
 ```typescript
 i18n.init({
   // 添加到命名空间列表
-  ns: ['common', 'auth', 'layout', 'user'],  // 新增 user
-  
+  ns: ['common', 'auth', 'layout', 'user'], // 新增 user
+
   // 添加到所有语言的资源
   resources: {
     'zh-CN': {
       common: zhCN.common,
       auth: zhCN.auth,
       layout: zhCN.layout,
-      user: zhCN.user,  // 新增
+      user: zhCN.user, // 新增
     },
     'en-US': {
       common: enUS.common,
       auth: enUS.auth,
       layout: enUS.layout,
-      user: enUS.user,  // 新增
+      user: enUS.user, // 新增
     },
   },
 })
@@ -233,7 +236,7 @@ i18n.init({
 在 `src/shared/i18n/types.d.ts` 中：
 
 ```typescript
-import userZhCN from './locales/zh-CN/user'  // 新增
+import userZhCN from './locales/zh-CN/user' // 新增
 
 declare module 'react-i18next' {
   interface CustomTypeOptions {
@@ -242,7 +245,7 @@ declare module 'react-i18next' {
       common: typeof commonZhCN
       auth: typeof authZhCN
       layout: typeof layoutZhCN
-      user: typeof userZhCN  // 新增
+      user: typeof userZhCN // 新增
     }
   }
 }
@@ -255,7 +258,7 @@ import { useTranslation } from '@/shared/i18n'
 
 function UserProfile() {
   const { t } = useTranslation('user')
-  
+
   return (
     <div>
       <h1>{t('profile.title')}</h1>
@@ -278,16 +281,18 @@ import { useTranslation } from '@/shared/i18n'
 #### 2. 选择命名空间
 
 **单个命名空间：**
+
 ```typescript
 const { t } = useTranslation('auth')
-t('form.email')  // 使用嵌套结构的键
+t('form.email') // 使用嵌套结构的键
 ```
 
 **多个命名空间：**
+
 ```typescript
 const { t } = useTranslation(['layout', 'auth'])
-t('nav.home')                    // layout 命名空间
-t('auth:messages.loginSuccess')  // auth 命名空间
+t('nav.home') // layout 命名空间
+t('auth:messages.loginSuccess') // auth 命名空间
 ```
 
 #### 3. 使用翻译键
@@ -307,7 +312,7 @@ t('auth:messages.loginSuccess')
 
 ```typescript
 // 语言资源：pagination.total: '共 {{total}} 条'
-t('pagination.total', { total: 100 })  // 输出：共 100 条
+t('pagination.total', { total: 100 }) // 输出：共 100 条
 ```
 
 ## 翻译资源结构规范
@@ -317,6 +322,7 @@ t('pagination.total', { total: 100 })  // 输出：共 100 条
 所有翻译资源使用**嵌套结构**，按功能分组：
 
 **common.ts:**
+
 ```typescript
 {
   actions: { ... },      // 操作按钮
@@ -329,6 +335,7 @@ t('pagination.total', { total: 100 })  // 输出：共 100 条
 ```
 
 **auth.ts:**
+
 ```typescript
 {
   form: { ... },        // 表单字段
@@ -338,6 +345,7 @@ t('pagination.total', { total: 100 })  // 输出：共 100 条
 ```
 
 **layout.ts:**
+
 ```typescript
 {
   nav: { ... },         // 导航菜单
@@ -361,7 +369,7 @@ t('pagination.total', { total: 100 })  // 输出：共 100 条
 
 1. 创建 `src/shared/i18n/locales/fr-FR/` 目录和所有命名空间文件（参考 `zh-CN` 和 `en-US` 的结构）
 2. 更新 `config.ts` 添加 `fr-FR` 到 `supportedLngs` 和 `resources`
-3. 更新 `LanguageToggle.tsx` 添加新语言选项
+3. 更新 `i18n.store.ts` 中的 `SUPPORTED_LANGUAGES` 添加新语言
 
 **重要：** 确保新语言的所有命名空间文件结构完全一致，所有翻译键都存在。
 
