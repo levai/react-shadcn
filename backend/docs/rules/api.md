@@ -45,7 +45,7 @@ router = APIRouter(prefix="/auth", tags=["认证"])
 
 @router.post("/login", response_model=TokenResponse)
 async def login(
-    login_data: UserLogin,
+    login_data: UserLogin = Body(...),
     auth_service: AuthService = Depends(get_auth_service),
 ):
     """用户登录"""
@@ -268,10 +268,12 @@ async def delete_user(
 
 1. **简洁性**：路由函数应该简洁，只调用服务层
 2. **类型提示**：所有参数和返回值都要有类型提示
-3. **文档字符串**：为每个路由添加文档字符串
-4. **响应模型**：使用 `response_model` 指定响应格式
-5. **依赖注入**：使用 `Depends` 获取服务和当前用户
-6. **异常处理**：让全局异常处理器处理异常
+3. **文档字符串**：为每个路由添加详细的文档字符串（支持 OpenAPI/Swagger）
+4. **响应模型**：使用 `response_model` 指定响应格式，确保类型安全
+5. **HTTP 状态码**：使用 `status_code` 明确指定状态码（如 `status_code=200`）
+6. **依赖注入**：使用 `Depends` 获取服务和当前用户
+7. **异常处理**：让全局异常处理器处理异常
+8. **统一响应格式**：所有响应使用统一格式，简单消息响应使用 `create_success_response(data=None, message="...")`
 
 ## 常见错误
 

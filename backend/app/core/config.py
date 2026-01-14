@@ -15,7 +15,10 @@ class Settings(BaseSettings):
     PORT: int = 8000
 
     # CORS 配置（支持字符串或列表）
-    CORS_ORIGINS: str | list[str] = "http://localhost:5173,http://localhost:3000"
+    # 开发环境：可以使用 "*" 允许所有源（但会禁用 credentials）
+    # 生产环境：必须明确指定允许的域名
+    # 默认：开发环境使用通配符，生产环境需要明确配置
+    CORS_ORIGINS: str | list[str] = "*"
 
     # 数据库配置
     DATABASE_URL: str = "sqlite:///./app.db"
@@ -39,8 +42,13 @@ class Settings(BaseSettings):
     def parse_cors_origins(cls, v: str | list[str]) -> list[str]:
         """解析 CORS_ORIGINS，支持字符串或列表格式"""
         if isinstance(v, str):
-            return [origin.strip() for origin in v.split(",") if origin.strip()]
-        return v
+            # 如果是通配符 "*"，直接返回（用于开发环境）
+            if v.strip() == "*":
+                return ["*"]
+            # 否则解析为列表
+            origins = [origin.strip() for origin in v.split(",") if origin.strip()]
+            return origins if origins else ["*"]  # 空字符串时默认使用通配符
+        return v if isinstance(v, list) else ["*"]
 
 
 settings = Settings()

@@ -129,9 +129,13 @@ http://localhost:8000/docs
 
 ```json
 {
-  "id": "123",
-  "title": "文章标题",
-  "content": "文章内容"
+  "code": 200,
+  "message": null,
+  "data": {
+    "id": "123",
+    "title": "文章标题",
+    "content": "文章内容"
+  }
 }
 ```
 
@@ -139,9 +143,13 @@ http://localhost:8000/docs
 
 ```json
 {
-  "detail": "错误信息"
+  "code": 404,
+  "message": "资源不存在",
+  "data": null
 }
 ```
+
+> 📖 详细说明请参考：[架构总览](../ARCHITECTURE_OVERVIEW.md#统一响应格式成功和错误一致) 或 [异常处理规范](../rules/exception.md#统一响应格式成功和错误一致)
 
 ## 完整示例
 

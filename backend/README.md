@@ -34,6 +34,23 @@ cp .env.example .env
 # 编辑 .env 文件，配置相关参数
 ```
 
+**CORS 配置（开发环境）：**
+
+开发环境默认使用通配符 `*`，允许所有源访问（方便测试）：
+
+```bash
+# .env 文件
+CORS_ORIGINS=*
+```
+
+**注意**：使用通配符时，`allow_credentials` 会自动禁用，但 JWT Token 通过 `Authorization` header 传递，不受影响。
+
+**生产环境**：必须明确指定允许的域名：
+
+```bash
+CORS_ORIGINS=https://yourdomain.com,https://www.yourdomain.com
+```
+
 ### 4. 初始化数据库
 
 ```bash
@@ -261,6 +278,16 @@ class UserRepository(BaseRepository[User]):
 ### 认证相关
 
 - `POST /api/v1/auth/login` - 用户登录
+  - **请求**：`{"username": "admin", "password": "admin123"}`
+  - **响应**（业界标准格式）：
+    ```json
+    {
+      "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+      "token_type": "Bearer",
+      "expires_in": 1800,
+      "refresh_token": null
+    }
+    ```
 - `POST /api/v1/auth/logout` - 用户登出（需要认证）
 - `GET /api/v1/auth/me` - 获取当前用户信息（需要认证）
 
@@ -330,11 +357,12 @@ pip install mysqlclient
 3. ✅ 使用 Repository Pattern，禁止服务层直接使用 ORM ⭐
 4. ✅ 使用 Unit of Work Pattern 管理事务 ⭐
 5. ✅ 使用自定义异常类，禁止直接抛出 HTTPException
-6. ✅ 使用依赖注入获取服务
-7. ✅ 使用 Pydantic Schema 进行数据验证
-8. ✅ 使用类型提示
-9. ✅ 在服务层记录日志
-10. ✅ 使用绝对导入
+6. ✅ 统一响应格式（业界标准）：`{"code": HTTP状态码, "message": "...", "data": ...}` ⭐
+7. ✅ 使用依赖注入获取服务
+8. ✅ 使用 Pydantic Schema 进行数据验证
+9. ✅ 使用类型提示
+10. ✅ 在服务层记录日志
+11. ✅ 使用绝对导入
 
 ### 快速参考
 
@@ -352,24 +380,12 @@ pip install mysqlclient
 - [添加新服务](./docs/workflows/add-service.md)
 - [添加新 API](./docs/workflows/add-api.md)
 
-### 文档目录
+### 文档
 
-#### 规范文档
+> 📖 **完整文档索引**：查看 [文档索引](./docs/README.md) 获取所有文档的详细导航
 
-- **[AI 编程助手统一规范](./docs/rules/ai-instructions.md)** - 主规范文件（**唯一维护源**）
-- [服务层规范](./docs/rules/service.md) - 服务层开发规范
-- [API 路由规范](./docs/rules/api.md) - API 路由开发规范
-- [Repository Pattern 规范](./docs/rules/repository.md) - Repository Pattern 开发规范 ⭐
-- [Unit of Work Pattern 规范](./docs/rules/unit_of_work.md) - Unit of Work Pattern 开发规范 ⭐
-- [异常处理规范](./docs/rules/exception.md) - 异常处理规范
-- [日志规范](./docs/rules/logging.md) - 日志记录规范
-
-#### 工作流文档
-
-- [添加新服务](./docs/workflows/add-service.md) - 如何添加新服务
-- [添加新 API](./docs/workflows/add-api.md) - 如何添加新 API
-
-#### 部署文档
-
-- [生产环境部署指南](./docs/PRODUCTION.md) - 生产环境配置和数据库选择 ⭐
+**快速链接：**
+- [架构总览](./docs/ARCHITECTURE_OVERVIEW.md) - 快速了解项目架构 ⭐
+- [AI 编程助手统一规范](./docs/rules/ai-instructions.md) - 主规范文件（**唯一维护源**）
+- [生产环境部署指南](./docs/PRODUCTION.md) - 生产环境配置 ⭐
 

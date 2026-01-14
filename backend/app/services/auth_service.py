@@ -34,7 +34,7 @@ class AuthService(BaseService):
         return user
 
     def create_access_token_for_user(self, user: User) -> TokenResponse:
-        """为用户创建访问令牌"""
+        """为用户创建访问令牌（业界标准格式）"""
         access_token_expires = timedelta(
             minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES
         )
@@ -42,9 +42,12 @@ class AuthService(BaseService):
             data={"sub": user.username}, expires_delta=access_token_expires
         )
 
+        # 业界标准格式：access_token, token_type, expires_in
         return TokenResponse(
-            token=access_token,
-            expireTime=int(access_token_expires.total_seconds()),
+            access_token=access_token,
+            token_type="Bearer",
+            expires_in=int(access_token_expires.total_seconds()),
+            refresh_token=None,  # 可选：后续可以实现刷新令牌
         )
 
     def login(self, username: str, password: str) -> TokenResponse:

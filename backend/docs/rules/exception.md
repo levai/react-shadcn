@@ -111,13 +111,88 @@ async def get_user(
 - 记录异常日志
 - 返回统一的错误响应格式
 
-### 异常响应格式
+### 统一响应格式（成功和错误一致）
+
+所有 API 响应都使用统一格式：
 
 ```json
 {
-  "detail": "错误信息"
+  "code": 响应代码（HTTP 状态码，200 表示成功，其他表示错误）,
+  "message": "响应消息（可选）",
+  "data": "响应数据（成功时为数据，错误时为 null）"
 }
 ```
+
+**成功响应示例：**
+
+```json
+// 200 成功
+{
+  "code": 200,
+  "message": "操作成功",
+  "data": {
+    "access_token": "...",
+    "token_type": "Bearer",
+    "expires_in": 1800
+  }
+}
+```
+
+**错误响应示例：**
+
+```json
+// 401 认证错误
+{
+  "code": 401,
+  "message": "认证失败",
+  "data": null
+}
+
+// 404 资源未找到
+{
+  "code": 404,
+  "message": "用户不存在",
+  "data": null
+}
+
+// 422 验证错误
+{
+  "code": 422,
+  "message": "body -> username: 字符串长度必须大于等于3; body -> password: 字符串长度必须大于等于6",
+  "data": null
+}
+
+// 500 服务器错误
+{
+  "code": 500,
+  "message": "内部服务器错误",
+  "data": null
+}
+```
+
+**响应代码说明：**
+
+`code` 字段使用 HTTP 状态码：
+
+| HTTP 状态码 | code 值 | 说明 |
+|------------|---------|------|
+| 200 | 200 | 成功 |
+| 201 | 201 | 创建成功 |
+| 400 | 400 | 请求错误 |
+| 401 | 401 | 认证失败 |
+| 403 | 403 | 权限不足 |
+| 404 | 404 | 资源未找到 |
+| 409 | 409 | 资源冲突 |
+| 422 | 422 | 请求参数验证失败 |
+| 500 | 500 | 服务器内部错误 |
+
+**优势：**
+- ✅ **统一格式**：成功和错误响应格式完全一致
+- ✅ **前后端一致**：与前端期望的格式完全匹配
+- ✅ **机器可读**：响应代码便于程序化处理
+- ✅ **人类可读**：响应消息清晰易懂
+- ✅ **结构清晰**：统一的响应结构，便于前端统一处理
+- ✅ **类型安全**：使用 Pydantic Schema 定义（`UnifiedResponse`）
 
 ### 异常处理器示例
 
@@ -125,7 +200,16 @@ async def get_user(
 async def base_api_exception_handler(
     request: Request, exc: BaseAPIException
 ) -> JSONResponse:
-    """处理自定义 API 异常"""
+    """
+    处理自定义 API 异常
+    
+    返回统一响应格式：
+    {
+        "code": 401,  // HTTP 状态码
+        "message": "错误消息",
+        "data": null
+    }
+    """
     logger.warning(
         "API 异常",
         path=request.url.path,
@@ -134,9 +218,14 @@ async def base_api_exception_handler(
         detail=exc.detail,
     )
     
+    # 统一响应格式：code 使用 HTTP 状态码
     return JSONResponse(
         status_code=exc.status_code,
-        content={"detail": exc.detail},
+        content={
+            "code": exc.status_code,  # 使用 HTTP 状态码
+            "message": exc.detail,
+            "data": None,
+        },
     )
 ```
 

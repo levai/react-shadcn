@@ -44,10 +44,14 @@ class UserLogin(BaseModel):
 
 
 class TokenResponse(BaseModel):
-    """Token 响应模式"""
+    """Token 响应模式（业界标准格式）"""
 
-    token: str
-    expireTime: int | None = Field(None, alias="expire_time")
+    access_token: str = Field(..., description="访问令牌（JWT）")
+    token_type: str = Field(default="Bearer", description="令牌类型")
+    expires_in: int | None = Field(None, description="过期时间（秒）")
+    refresh_token: str | None = Field(None, description="刷新令牌（可选）")
 
     class Config:
         populate_by_name = True  # 允许使用字段名或别名
+
+

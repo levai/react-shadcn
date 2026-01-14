@@ -7,12 +7,14 @@
 ```
 docs/
 ├── README.md                    # 本文档（文档索引）
+├── ARCHITECTURE_OVERVIEW.md    # 架构总览（快速了解项目）⭐
+├── PRODUCTION.md               # 生产环境部署指南
 ├── rules/                      # 开发规范
 │   ├── ai-instructions.md      # AI 编程助手统一规范（主规范）
 │   ├── service.md              # 服务层规范
 │   ├── api.md                  # API 路由规范
 │   ├── repository.md           # Repository Pattern 规范 ⭐
-│   ├── unit_of_work.md         # Unit of Work Pattern 规范 ⭐
+│   ├── unit_of_work.md          # Unit of Work Pattern 规范 ⭐
 │   ├── exception.md            # 异常处理规范
 │   └── logging.md              # 日志规范
 └── workflows/                   # 工作流文档
@@ -25,7 +27,8 @@ docs/
 
 ### 新开发者必读
 
-1. **[AI 编程助手统一规范](./rules/ai-instructions.md)** - 开始前必读，了解项目架构和核心规则
+1. **[架构总览](./ARCHITECTURE_OVERVIEW.md)** - 快速了解项目架构、API 端点、数据模型等 ⭐
+2. **[AI 编程助手统一规范](./rules/ai-instructions.md)** - 开始前必读，了解项目架构和核心规则
 
 ### 开发新功能
 

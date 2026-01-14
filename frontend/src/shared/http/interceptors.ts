@@ -17,7 +17,7 @@ interface ExtendedRequestConfig extends InternalAxiosRequestConfig {
  * 统一响应格式（后端返回的标准格式）
  */
 interface UnifiedResponse<T = unknown> {
-  code: string | number
+  code: number // HTTP 状态码（200 表示成功，其他表示错误）
   message?: string
   data?: T
 }
@@ -40,13 +40,13 @@ export interface HttpError {
  * 格式化错误消息
  */
 function formatErrorMessage(error: AxiosError): string {
-  // 后端统一错误格式：{ "error": { "code": "...", "message": "..." } }
+  // 后端统一响应格式：{ "code": "...", "message": "...", "data": null }
   const responseData = error.response?.data as
-    | { error?: { code?: string; message?: string } }
+    | { code?: string | number; message?: string; data?: unknown }
     | undefined
 
-  // 优先使用后端返回的 error.message 字段（业界标准格式）
-  if (responseData?.error?.message) return responseData.error.message
+  // 优先使用后端返回的 message 字段（统一响应格式）
+  if (responseData?.message) return responseData.message
 
   // 根据状态码返回默认消息
   const status = error.response?.status
@@ -85,13 +85,13 @@ function formatErrorMessage(error: AxiosError): string {
  */
 function createHttpError(error: AxiosError): HttpError {
   const responseData = error.response?.data as
-    | { error?: { code?: string; message?: string } }
+    | { code?: string | number; message?: string; data?: unknown }
     | undefined
 
   return {
     message: formatErrorMessage(error),
     status: error.response?.status,
-    code: responseData?.error?.code || error.code,
+    code: responseData?.code ? String(responseData.code) : error.code,
     data: error.response?.data,
   }
 }
@@ -114,8 +114,9 @@ function handleUnifiedResponse(responseData: unknown, httpStatus: number): unkno
     const unifiedResponse = responseData as UnifiedResponse
     const code = unifiedResponse.code
 
-    // 判断是否为成功状态码（"200" 或 200）
-    const isSuccess = code === '200' || code === 200
+    // 判断是否为成功状态码（200-299 范围）
+    const codeNum = typeof code === 'string' ? parseInt(code, 10) : code
+    const isSuccess = codeNum >= 200 && codeNum < 300
 
     if (isSuccess) {
       // 成功：直接返回 data 字段，简化使用
