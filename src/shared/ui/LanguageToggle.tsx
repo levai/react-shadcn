@@ -20,8 +20,9 @@ import i18n from '@/shared/i18n'
  */
 export function LanguageToggle() {
   const { t } = useTranslation('layout')
+  // 从 localStorage 读取语言，如果没有则使用 i18n 当前语言或默认值
   const [language, setLanguage] = useLocalStorageState<string>('i18nextLng', {
-    defaultValue: 'zh-CN',
+    defaultValue: i18n.language || 'zh-CN',
   })
 
   // 同步语言设置到 i18n
@@ -30,6 +31,14 @@ export function LanguageToggle() {
       i18n.changeLanguage(language)
     }
   }, [language])
+
+  // 初始化时，如果 localStorage 中没有值，使用 i18n 当前语言
+  useEffect(() => {
+    const savedLanguage = localStorage.getItem('i18nextLng')
+    if (!savedLanguage && i18n.language) {
+      setLanguage(i18n.language)
+    }
+  }, [setLanguage])
 
   const handleLanguageChange = (lang: string) => {
     setLanguage(lang)
