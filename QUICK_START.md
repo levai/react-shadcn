@@ -1,6 +1,35 @@
 # 快速启动指南
 
-## 前后端集成启动
+## 🚀 一键启动（推荐）
+
+### macOS/Linux
+
+```bash
+# 直接运行启动脚本
+./start.sh
+```
+
+### Windows
+
+```powershell
+# 在 PowerShell 中运行
+.\start.ps1
+```
+
+**脚本功能：**
+- ✅ 自动检查并初始化数据库（如需要）
+- ✅ 自动检查并安装前端依赖（如需要）
+- ✅ 同时启动前后端服务
+- ✅ 显示服务地址和日志查看方式
+- ✅ 按 `Ctrl+C` 一键停止所有服务
+
+**日志查看：**
+- macOS/Linux: `tail -f backend.log` 和 `tail -f frontend.log`
+- Windows: `Receive-Job -Job <JobId> -Keep`
+
+---
+
+## 前后端集成启动（手动方式）
 
 ### 1. 启动后端服务
 
