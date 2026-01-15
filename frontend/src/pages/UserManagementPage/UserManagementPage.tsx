@@ -6,9 +6,10 @@ import type { User, CreateUserRequest, UpdateUserRequest } from '@/features/user
 import { UserList, UserForm } from '@/features/users'
 import { Card, Modal, Button, Spin, Result, Typography, Space } from 'antd'
 import { Plus } from 'lucide-react'
-import { message } from 'antd'
+import { toast } from 'sonner'
 
 const { Title } = Typography
+toast('asdasd', { duration: 100000 })
 
 /**
  * 用户管理页面
@@ -19,7 +20,6 @@ export default function UserManagementPage() {
   const [editingUser, setEditingUser] = useState<User | null>(null)
   const [page, setPage] = useState(0)
   const pageSize = 20
-
   const {
     data: usersData,
     loading,
@@ -43,10 +43,10 @@ export default function UserManagementPage() {
     try {
       if (editingUser) {
         await userService.updateUser(editingUser.id, data as UpdateUserRequest)
-        message.success(t('common:actions.updateSuccess'))
+        toast.success(t('common:actions.updateSuccess'))
       } else {
         await userService.createUser(data as CreateUserRequest)
-        message.success(t('common:actions.createSuccess'))
+        toast.success(t('common:actions.createSuccess'))
       }
       setIsFormOpen(false)
       setEditingUser(null)
@@ -56,7 +56,7 @@ export default function UserManagementPage() {
         error && typeof error === 'object' && 'message' in error
           ? String(error.message)
           : t('common:actions.operationFailed')
-      message.error(errorMessage)
+      toast.error(errorMessage)
       throw error // 重新抛出，让表单组件知道提交失败
     }
   }

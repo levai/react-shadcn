@@ -18,28 +18,34 @@ import { Button } from '@/shared/ui'
 
 1. **优先使用 Ant Design 组件** - 能用 Ant Design 组件实现的，优先使用组件
 2. **Tailwind CSS 作为补充** - 仅用于布局、间距、响应式等辅助样式
-3. **保持一致性** - 所有 UI 组件统一使用 Ant Design 的设计语言
+3. **保持一致性** - **所有 UI 组件统一使用 Ant Design 的设计语言** ⭐
+4. **Toast 通知使用 sonner** - Toast 通知统一使用 `sonner` 的 `toast` API ⭐
 
 ## Toast 通知
 
-**使用 Ant Design 的 `message` API：**
-
-```typescript
-import { message } from 'antd'
-
-message.success('操作成功')
-message.error('操作失败')
-message.warning('请注意')
-message.info('提示信息')
-```
-
-**或者使用 `sonner`（用于非 Ant Design 场景）：**
+**⚠️ 重要：虽然 UI 组件统一使用 Ant Design，但 Toast 通知统一使用 `sonner` 的 `toast` API：**
 
 ```typescript
 import { toast } from 'sonner'
 
 toast.success('操作成功')
 toast.error('操作失败')
+toast.warning('请注意')
+toast.info('提示信息')
+```
+
+**Toaster Provider 已全局配置：**
+
+项目已在 `ToasterProvider` 中配置了全局 Toaster，自动适配主题：
+
+- **位置**：`top-center`
+- **主题适配**：根据当前主题的 `isDark` 配置自动设置 `theme` prop（`'light'` 或 `'dark'`）
+- **颜色方案**：使用 `richColors` 启用丰富的颜色区分（Success=绿色，Error=红色，Warning=橙色，Info=蓝色）
+- **自定义主题支持**：自定义主题（如 `theme-blue`）会根据其 `isDark` 配置自动使用对应的主题模式
+
+```typescript
+// 已在 src/app/providers/ToasterProvider.tsx 中配置
+// 自动检测当前主题 class，根据 isDark 配置设置 theme prop
 ```
 
 ## 主题管理
@@ -69,6 +75,7 @@ function Header() {
 - 支持自定义主题（如 `theme-blue`）
 
 **实现变化：**
+
 - ✅ **统一按钮样式**：与 `LanguageToggle` 使用相同的按钮样式（`size="small" shape="circle"`）
 - ✅ **配置驱动**：从 `src/shared/config/themes.ts` 统一配置中心读取主题列表
 - ✅ **图标自动切换**：不再使用固定的 Sun/Moon 切换，而是显示当前主题对应的图标
@@ -126,6 +133,7 @@ function Header() {
 - 图标使用 `lucide-react` 的 `Languages` 图标
 
 **实现变化：**
+
 - ✅ **统一按钮样式**：与 `ThemeToggle` 使用相同的按钮样式（`size="small" shape="circle"`）
 - ✅ **图标统一**：使用 Ant Design 的 `icon` prop 传递图标，图标大小为 `h-4 w-4`
 - ✅ **简化实现**：移除了不必要的样式类和嵌套结构
@@ -326,7 +334,7 @@ className={cn(
 
 #### 颜色类名
 
-**必须使用 shadcn/ui 标准类名：**
+**必须使用 Tailwind CSS 标准类名（通过 CSS 变量定义）：**
 
 | 用途         | 类名                    | 说明                 |
 | ------------ | ----------------------- | -------------------- |

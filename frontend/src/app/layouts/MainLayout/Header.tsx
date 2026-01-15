@@ -79,11 +79,7 @@ export function Header() {
 
         {user ? (
           <Dropdown menu={{ items: userMenuItems }} placement="bottomRight">
-            <Button
-              type="text"
-              className="relative h-9 w-9 rounded-full border p-0"
-              style={{ padding: 0 }}
-            >
+            <Button shape="circle">
               <div className="flex h-full w-full items-center justify-center rounded-full bg-muted">
                 <span className="text-xs font-medium">{user.name?.[0]?.toUpperCase() || 'U'}</span>
               </div>

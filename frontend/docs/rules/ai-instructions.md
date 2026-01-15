@@ -10,12 +10,13 @@
 
 - React 19 + TypeScript 5.9
 - Vite 7 + Tailwind CSS 4
+- **Ant Design** (主要 UI 组件库) ⭐
 - Zustand (状态管理)
 - React Router 7 (路由)
 - Axios (HTTP 客户端)
 - react-i18next (国际化)
 - ahooks (Hooks 库)
-- sonner (Toast 通知)
+- **sonner** (Toast 通知) ⭐
 - lucide-react (图标库)
 - Prettier (代码格式化)
 - ESLint (代码检查)
@@ -419,16 +420,28 @@ style={{ color: '#05C79A' }}
 **统一使用：**
 
 - 图标：`lucide-react`
-- Toast：`sonner`
+- Toast：**统一使用 `sonner` 的 `toast` API**
 
 ```typescript
-import { Home, Settings, User } from 'lucide-react'
 import { toast } from 'sonner'
+import { Home, Settings, User } from 'lucide-react'
 
 <Home className="h-5 w-5" />
 toast.success('操作成功')
 toast.error('操作失败')
+toast.warning('请注意')
+toast.info('提示信息')
 ```
+
+**Toaster Provider 已全局配置：**
+
+项目已在 `ToasterProvider` 中配置了全局 Toaster：
+
+- 自动根据当前主题的 `isDark` 配置设置 `theme` prop
+- 使用 `richColors` 启用丰富的颜色区分
+- 支持所有自定义主题（如 `theme-blue`）
+
+> 📖 **详细指南**：查看 [`ui.md`](./ui.md) 了解 UI 组件使用规范。
 
 ### Git 提交规范
 
@@ -469,7 +482,7 @@ docs: update development guidelines
 6. ✅ 使用 `useRequest` 进行数据请求
 7. ✅ 使用 ROUTES 常量
 8. ✅ 使用 STORAGE_KEYS 管理存储 key
-9. ✅ 使用 toast (sonner)
+9. ✅ **统一使用 Ant Design 组件和 sonner 的 toast API** ⭐
 10. ✅ 使用 lucide-react 图标
 11. ✅ 遵循 FSD 架构
 

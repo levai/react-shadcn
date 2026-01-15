@@ -19,12 +19,13 @@ description: 项目核心开发规范和架构指导原则（前后端）
 
 - React 19 + TypeScript 5.9
 - Vite 7 + Tailwind CSS 4
+- **Ant Design** (主要 UI 组件库) ⭐
 - Zustand (状态管理)
 - React Router 7 (路由)
 - Axios (HTTP 客户端)
 - react-i18next (国际化)
 - ahooks (Hooks 库)
-- sonner (Toast 通知)
+- sonner (Toast 通知，用于非 Ant Design 场景)
 - lucide-react (图标库)
 
 ### 前端目录结构
@@ -123,19 +124,48 @@ className="bg-primary text-primary-foreground"  // ✅ 正确
 className="bg-[#05C79A]"                        // ❌ 错误
 ```
 
+#### UI 组件库
+
+**项目完全使用 Ant Design 作为主要 UI 组件库，Tailwind CSS 仅用于布局和自定义样式补充。**
+
+**核心原则：**
+- **所有 UI 组件统一使用 Ant Design 的设计语言** ⭐
+- **Toast 通知使用 sonner** ⭐
+
+```typescript
+// ✅ 正确 - 从 antd 导入组件
+import { Button, Input, Form, Card, Table, Modal, Row, Col, Space } from 'antd'
+
+// ❌ 错误 - 不要从 @/shared/ui 导入 UI 组件（已移除）
+import { Button } from '@/shared/ui'
+```
+
+> 📖 **详细指南**：查看 [`frontend/docs/rules/ui.md`](../../frontend/docs/rules/ui.md) 了解完整的使用规范和最佳实践。
+
 #### 图标和通知
 
 **统一使用：**
+
 - 图标：`lucide-react`
-- Toast：`sonner`
+- Toast：**统一使用 `sonner` 的 `toast` API**
 
 ```typescript
-import { Home } from 'lucide-react'
 import { toast } from 'sonner'
+import { Home } from 'lucide-react'
 
 <Home className="h-5 w-5" />
 toast.success('操作成功')
+toast.error('操作失败')
+toast.warning('请注意')
+toast.info('提示信息')
 ```
+
+**Toaster Provider 已全局配置：**
+
+项目已在 `ToasterProvider` 中配置了全局 Toaster：
+- 自动根据当前主题的 `isDark` 配置设置 `theme` prop（`'light'` 或 `'dark'`）
+- 使用 `richColors` 启用丰富的颜色区分（Success=绿色，Error=红色，Warning=橙色，Info=蓝色）
+- 支持所有自定义主题（如 `theme-blue`），会根据其 `isDark` 配置自动适配
 
 ---
 
@@ -282,7 +312,7 @@ raise HTTPException(status_code=404, detail="用户不存在")  # ❌
 5. ✅ 始终使用 i18n
 6. ✅ 使用 `useRequest` 进行数据请求
 7. ✅ 使用 ROUTES 常量
-8. ✅ 使用 toast (sonner)
+8. ✅ **统一使用 Ant Design 组件和 sonner 的 toast API** ⭐
 9. ✅ 使用 lucide-react 图标
 10. ✅ 遵循 FSD 架构
 

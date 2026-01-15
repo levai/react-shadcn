@@ -2,7 +2,8 @@ import { useState } from 'react'
 import { useTranslation } from '@/shared/i18n'
 import { userService } from '../api'
 import type { User } from '../types'
-import { Table, Avatar, Badge, Space, Popconfirm, message, Button, Empty } from 'antd'
+import { Table, Avatar, Badge, Space, Popconfirm, Button, Empty } from 'antd'
+import { toast } from 'sonner'
 import type { ColumnsType, TablePaginationConfig } from 'antd/es/table'
 import { Edit, Trash2, Power, PowerOff } from 'lucide-react'
 
@@ -26,7 +27,7 @@ export function UserList({ users, onEdit, onRefresh, pagination = false }: UserL
     setLoadingId(user.id)
     try {
       await userService.toggleUserActive(user.id)
-      message.success(
+      toast.success(
         user.is_active ? t('common:actions.deactivateSuccess') : t('common:actions.activateSuccess')
       )
       onRefresh()
@@ -35,7 +36,7 @@ export function UserList({ users, onEdit, onRefresh, pagination = false }: UserL
         error && typeof error === 'object' && 'message' in error
           ? String(error.message)
           : t('common:actions.operationFailed')
-      message.error(errorMessage)
+      toast.error(errorMessage)
     } finally {
       setLoadingId(null)
     }
@@ -45,14 +46,14 @@ export function UserList({ users, onEdit, onRefresh, pagination = false }: UserL
     setLoadingId(user.id)
     try {
       await userService.deleteUser(user.id)
-      message.success(t('common:actions.deleteSuccess'))
+      toast.success(t('common:actions.deleteSuccess'))
       onRefresh()
     } catch (error: unknown) {
       const errorMessage =
         error && typeof error === 'object' && 'message' in error
           ? String(error.message)
           : t('common:actions.operationFailed')
-      message.error(errorMessage)
+      toast.error(errorMessage)
     } finally {
       setLoadingId(null)
     }

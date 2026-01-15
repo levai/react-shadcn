@@ -8,7 +8,8 @@
 
 1. **优先使用 Ant Design 组件** - 能用 Ant Design 组件实现的，优先使用组件
 2. **Tailwind CSS 作为补充** - 仅用于布局、间距、响应式等辅助样式
-3. **保持一致性** - 所有 UI 组件统一使用 Ant Design 的设计语言
+3. **保持一致性** - **所有 UI 组件统一使用 Ant Design 的设计语言** ⭐
+4. **Toast 通知使用 sonner** - Toast 通知统一使用 `sonner` 的 `toast` API ⭐
 
 ## 📦 组件使用规范
 

@@ -1,19 +1,43 @@
+import { useEffect, useState } from 'react'
 import { useTheme } from 'next-themes'
 import { Toaster } from 'sonner'
+import { getCurrentThemeClass, isDarkMode } from '@/shared/config/theme'
 
 /**
  * Toast 通知 Provider
  * 提供全局 Toast 通知功能，自动适配主题
+ * 支持自定义主题（theme-blue 等）
+ *
+ * 根据当前主题的 isDark 配置设置 sonner 的 theme prop
+ * CSS 变量会根据当前主题 class（.dark, .light, .theme-blue 等）自动使用对应的主题色
  */
 export function ToasterProvider() {
-  const { theme } = useTheme()
+  const { resolvedTheme } = useTheme()
+  const [themeClass, setThemeClass] = useState<string>(() => getCurrentThemeClass())
 
-  return (
-    <Toaster
-      position="top-center"
-      richColors
-      // 主题适配：使用当前主题，如果未设置则使用 'system'（自动检测）
-      theme={(theme as 'light' | 'dark' | 'system') || 'system'}
-    />
-  )
+  // 监听 DOM 变化，检测主题 class 切换（与 AntDesignProvider 保持一致）
+  useEffect(() => {
+    const updateThemeClass = () => {
+      setThemeClass(getCurrentThemeClass())
+    }
+
+    // 初始检查
+    updateThemeClass()
+
+    // 监听 DOM 变化（主题切换时 class 会变化）
+    const observer = new MutationObserver(updateThemeClass)
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class'],
+    })
+
+    return () => observer.disconnect()
+  }, [resolvedTheme])
+
+  // 根据当前主题 class 判断是否为深色模式
+  // sonner 的 theme 只支持 'light' | 'dark' | 'system'
+  // 对于自定义主题（如 theme-blue），根据其 isDark 配置来决定使用 'light' 或 'dark'
+  const toastTheme = isDarkMode(themeClass) ? 'dark' : 'light'
+
+  return <Toaster position="top-center" richColors theme={toastTheme} />
 }

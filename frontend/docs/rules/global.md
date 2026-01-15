@@ -6,10 +6,13 @@
 - **TypeScript**: 5.9.x
 - **Vite**: 7.x
 - **Tailwind CSS**: 4.x
+- **Ant Design**: 主要 UI 组件库
 - **Zustand**: 5.x（状态管理）
 - **React Router**: 7.x
 - **Axios**: HTTP 客户端
 - **react-i18next**: 国际化（i18n）
+- **sonner**: Toast 通知
+- **lucide-react**: 图标库
 
 ## 目录结构 (Feature-Sliced Design)
 
@@ -511,7 +514,7 @@ import { useAuthStore } from '@/features/auth/model/auth.store'
 
 - **React Refresh 规则** - 允许在组件文件中导出 Hooks 和 variants
   - 允许导出：`useFormField`、`buttonVariants`、`badgeVariants` 等
-  - 这是为了支持 shadcn/ui 组件的常见模式（组件 + Hook/variants）
+  - 这是为了支持自定义组件的常见模式（组件 + Hook/variants）
 
 **如需添加新的 Hook 或 variants 导出：**
 
