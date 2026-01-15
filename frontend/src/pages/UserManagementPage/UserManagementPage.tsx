@@ -9,7 +9,6 @@ import { Plus } from 'lucide-react'
 import { toast } from 'sonner'
 
 const { Title } = Typography
-toast('asdasd', { duration: 100000 })
 
 /**
  * 用户管理页面

@@ -8,8 +8,10 @@ import { getCurrentThemeClass, isDarkMode } from '@/shared/config/theme'
  * 提供全局 Toast 通知功能，自动适配主题
  * 支持自定义主题（theme-blue 等）
  *
- * 根据当前主题的 isDark 配置设置 sonner 的 theme prop
- * CSS 变量会根据当前主题 class（.dark, .light, .theme-blue 等）自动使用对应的主题色
+ * 实现方式：
+ * - 根据当前主题的 isDark 配置自动设置 sonner 的 theme prop（'light' 或 'dark'）
+ * - 使用 richColors 启用丰富的颜色区分（Success=绿色，Error=红色，Warning=橙色，Info=蓝色）
+ * - 自定义主题会根据其 isDark 配置自动使用对应的主题模式
  */
 export function ToasterProvider() {
   const { resolvedTheme } = useTheme()

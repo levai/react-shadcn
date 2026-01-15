@@ -122,26 +122,31 @@ import { Result, Button } from 'antd'
 </div>
 ```
 
-#### message / notification（替代 toast）
+#### Toast 通知
+
+**⚠️ 重要：项目统一使用 `sonner` 的 `toast` API，不使用 Ant Design 的 `message` 或 `notification`。**
 
 ```typescript
-import { message, notification } from 'antd'
+import { toast } from 'sonner'
 
-// ✅ 正确 - 简单提示
-message.success('操作成功')
-message.error('操作失败')
+// ✅ 正确 - 统一使用 sonner
+toast.success('操作成功')
+toast.error('操作失败')
+toast.warning('请注意')
+toast.info('提示信息')
 
-// ✅ 正确 - 复杂通知
-notification.success({
-  message: '操作成功',
+// ✅ 正确 - 带描述的 Toast
+toast.success('操作成功', {
   description: '详细信息',
-  placement: 'topRight',
 })
 
-// ❌ 错误 - 不要使用 sonner（除非特殊场景）
-import { toast } from 'sonner'
-toast.success('操作成功')
+// ❌ 错误 - 不要使用 Ant Design 的 message/notification
+import { message, notification } from 'antd'
+message.success('操作成功') // ❌
+notification.success({ ... }) // ❌
 ```
+
+> 📖 **详细指南**：查看 [`ui.md`](../rules/ui.md) 了解 Toast 通知使用规范。
 
 ### 表单组件
 
@@ -225,6 +230,7 @@ Tailwind CSS **仅用于以下场景**：
    ```
 
 3. **自定义样式补充**
+
    ```typescript
    <Card className="custom-shadow">
    ```
