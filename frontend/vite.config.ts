@@ -31,7 +31,7 @@ export default defineConfig(({ mode }) => {
       host: true,
       proxy: {
         '/api': {
-          target: 'http://localhost:8000',
+          target: 'http://localhost:3000',
           changeOrigin: true, // 改变请求头中的 origin，解决跨域问题
           // 后端 API 路径是 /api/v1/xxx，不需要重写路径
           // rewrite: path => path.replace(/^\/api/, ''),

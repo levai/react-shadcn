@@ -67,7 +67,7 @@ APP_VERSION=1.0.0
 
 # 服务器配置
 HOST=0.0.0.0
-PORT=8000
+PORT=3000
 
 # 数据库配置（PostgreSQL 或 MySQL）
 DATABASE_URL=postgresql+psycopg2://user:password@localhost/dbname

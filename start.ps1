@@ -139,8 +139,8 @@ Write-Success "前后端服务已启动！"
 Write-Host ""
 Write-Host "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" -ForegroundColor Green
 Write-Host "📦 后端服务" -ForegroundColor Cyan
-Write-Host "   地址: http://localhost:8000" -ForegroundColor Green
-Write-Host "   API 文档: http://localhost:8000/docs" -ForegroundColor Green
+Write-Host "   地址: http://localhost:3000" -ForegroundColor Green
+Write-Host "   API 文档: http://localhost:3000/docs" -ForegroundColor Green
 Write-Host ""
 Write-Host "🎨 前端服务" -ForegroundColor Cyan
 Write-Host "   地址: http://localhost:5178" -ForegroundColor Green

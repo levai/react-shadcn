@@ -12,7 +12,7 @@ class Settings(BaseSettings):
 
     # 服务器配置
     HOST: str = "0.0.0.0"
-    PORT: int = 8000
+    PORT: int = 3000
 
     # CORS 配置（支持字符串或列表）
     # 开发环境：可以使用 "*" 允许所有源（但会禁用 credentials）

@@ -87,7 +87,7 @@ api_router.include_router(posts.router)  # 新增
 启动服务后，访问 Swagger 文档测试：
 
 ```
-http://localhost:8000/docs
+http://localhost:3000/docs
 ```
 
 ## RESTful API 设计规范
