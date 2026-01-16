@@ -1,5 +1,5 @@
 import { useNavigate, useLocation } from 'react-router-dom'
-import { Button, Dropdown, Space } from 'antd'
+import { Layout, Button, Dropdown, Space } from 'antd'
 import type { MenuProps } from 'antd'
 import { useAuthStore } from '@/features/auth'
 import { useAppStore } from '@/shared/stores'
@@ -8,6 +8,8 @@ import { useTranslation } from '@/shared/i18n'
 import { ThemeToggle, LanguageToggle } from '@/shared/ui'
 import { LogOut, Menu } from 'lucide-react'
 import { menuRoutes } from '@/routes'
+
+const { Header: AntHeader } = Layout
 
 export function Header() {
   const navigate = useNavigate()
@@ -39,7 +41,7 @@ export function Header() {
           <p className="truncate text-xs text-muted-foreground">{user?.username}</p>
         </div>
       ),
-      disabled: true,
+      className: '!cursor-default hover:!bg-transparent',
     },
     {
       type: 'divider',
@@ -58,7 +60,7 @@ export function Header() {
   ]
 
   return (
-    <header className="sticky top-0 z-10 flex h-16 w-full items-center gap-4 border-b bg-background px-6 backdrop-blur">
+    <AntHeader className="sticky top-0 z-10 flex items-center gap-4 px-6 backdrop-blur border-b border-border/50">
       {/* 移动端菜单按钮 */}
       <Button
         type="text"
@@ -68,9 +70,7 @@ export function Header() {
       />
 
       <div className="flex flex-1 items-center gap-4">
-        <h2 className="text-lg font-semibold text-foreground border-l-4 border-primary pl-3 py-1">
-          {pageTitle}
-        </h2>
+        <h2 className="text-lg font-semibold border-l-4 border-primary pl-3 py-1">{pageTitle}</h2>
       </div>
 
       <div className="flex items-center gap-3">
@@ -80,7 +80,7 @@ export function Header() {
         {user ? (
           <Dropdown menu={{ items: userMenuItems }} placement="bottomRight">
             <Button shape="circle">
-              <div className="flex h-full w-full items-center justify-center rounded-full bg-muted">
+              <div className="flex h-full w-full items-center justify-center rounded-full">
                 <span className="text-xs font-medium">{user.name?.[0]?.toUpperCase() || 'U'}</span>
               </div>
             </Button>
@@ -91,6 +91,6 @@ export function Header() {
           </Button>
         )}
       </div>
-    </header>
+    </AntHeader>
   )
 }

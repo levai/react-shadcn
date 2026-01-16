@@ -1,147 +1,21 @@
-import React, { memo, useCallback, useState, useRef, useEffect } from 'react'
-import { NavLink } from 'react-router-dom'
+import React, { memo, useCallback, useState, useRef, useEffect, useMemo } from 'react'
+import { useNavigate, useLocation } from 'react-router-dom'
+import { Layout, Menu, Tooltip } from 'antd'
+import type { MenuProps } from 'antd'
 import { PanelLeftClose, PanelLeft, Layers, GripVertical } from 'lucide-react'
 import { useAppStore } from '@/shared/stores'
 import { useTranslation } from '@/shared/i18n'
 import { ROUTE_TITLE_MAP } from '@/shared/constants'
 import { menuRoutes, type AppRouteConfig } from '@/routes'
 import { cn } from '@/shared/lib'
-import { Tooltip } from 'antd'
 
-// 导航项类型
-type NavItemType = {
-  id: string
-  path: string
-  icon: React.ComponentType<{ className?: string }> | undefined
-  label: string
-  visible: boolean
-  children?: Array<{ path: string; label: string }>
-}
+const { Sider } = Layout
 
 // 侧边栏宽度配置
 const SIDEBAR_MIN_WIDTH = 200
 const SIDEBAR_MAX_WIDTH = 400
 const SIDEBAR_DEFAULT_WIDTH = 260
 const SIDEBAR_COLLAPSED_WIDTH = 64
-
-// 单个导航项组件
-const SidebarNavItem = memo(function SidebarNavItem({
-  item,
-  isCollapsed,
-}: {
-  item: NavItemType
-  isCollapsed: boolean
-}) {
-  const Icon = item.icon
-  const hasChildren = Array.isArray(item.children) && item.children.length > 0
-
-  const content = (
-    <NavLink
-      to={item.path}
-      className={({ isActive }) =>
-        cn(
-          'group flex items-center rounded-lg transition-all duration-150',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background',
-          isCollapsed ? 'h-11 w-11 justify-center mx-auto' : 'h-11 px-3 gap-3',
-          isActive
-            ? 'bg-primary/15 text-primary shadow-sm'
-            : 'text-muted-foreground hover:bg-card/80 hover:text-foreground'
-        )
-      }
-    >
-      {({ isActive }) => (
-        <>
-          {Icon && (
-            <Icon
-              className={cn(
-                'shrink-0 transition-colors h-5 w-5',
-                isActive ? 'text-primary' : 'text-muted-foreground group-hover:text-foreground'
-              )}
-            />
-          )}
-          {!isCollapsed && <span className="text-sm font-medium truncate">{item.label}</span>}
-        </>
-      )}
-    </NavLink>
-  )
-
-  if (isCollapsed) {
-    return (
-      <Tooltip title={item.label} placement="right" mouseEnterDelay={0.3}>
-        {content}
-      </Tooltip>
-    )
-  }
-
-  return (
-    <div className="space-y-1">
-      {content}
-      {hasChildren && (
-        <div className="ml-9 space-y-1">
-          {item.children!.map(child => (
-            <NavLink
-              key={child.path}
-              to={child.path}
-              className={({ isActive }) =>
-                cn(
-                  'block text-sm px-2 py-1.5 rounded-md transition-all',
-                  isActive
-                    ? 'text-primary bg-primary/10'
-                    : 'text-muted-foreground hover:bg-card/80 hover:text-foreground'
-                )
-              }
-            >
-              {child.label}
-            </NavLink>
-          ))}
-        </div>
-      )}
-    </div>
-  )
-})
-
-// 导航分组类型
-type NavGroupType = {
-  id: string
-  title: string
-  items: NavItemType[]
-  visible: boolean
-}
-
-// 导航分组组件
-const SidebarNavGroup = memo(function SidebarNavGroup({
-  group,
-  isCollapsed,
-  isFirst,
-}: {
-  group: NavGroupType
-  isCollapsed: boolean
-  isFirst: boolean
-}) {
-  return (
-    <div className={cn(isCollapsed ? !isFirst && 'mt-8' : !isFirst && 'mt-6')}>
-      {/* 分组标题 */}
-      {!isCollapsed ? (
-        <div className="px-3 mb-2">
-          <span className="text-[11px] font-semibold text-muted-foreground/50 uppercase tracking-wider">
-            {group.title}
-          </span>
-        </div>
-      ) : (
-        <div className="flex justify-center mb-4">
-          <div className="w-6 h-px bg-border/50" />
-        </div>
-      )}
-
-      {/* 导航项列表 */}
-      <div className={cn('flex flex-col', isCollapsed ? 'gap-3 px-1.5' : 'gap-1 px-2')}>
-        {group.items.map(item => (
-          <SidebarNavItem key={item.path} item={item} isCollapsed={isCollapsed} />
-        ))}
-      </div>
-    </div>
-  )
-})
 
 // 拖动调整宽度的手柄组件
 const ResizeHandle = memo(function ResizeHandle({
@@ -210,47 +84,60 @@ const ResizeHandle = memo(function ResizeHandle({
   )
 })
 
-// 将路由配置转换为导航分组
-function convertRoutesToNavGroups(
+// 将路由配置转换为 Ant Design Menu 的 items
+function convertRoutesToMenuItems(
   routes: AppRouteConfig[],
   t: (key: string) => string
-): NavGroupType[] {
-  // 过滤出需要显示的菜单项
-  const visibleRoutes = routes.filter(route => route.meta && !route.meta.hideInMenu && route.path)
+): MenuProps['items'] {
+  return routes
+    .filter(route => route.meta && !route.meta.hideInMenu && route.path)
+    .map(route => {
+      const translationKey = route.path ? ROUTE_TITLE_MAP[route.path] : undefined
+      const label = translationKey ? t(translationKey) : route.meta?.title || route.path || ''
+      const Icon = route.meta?.icon
 
-  // 将所有菜单项放在一个默认分组中
-  const items: NavItemType[] = visibleRoutes.map(route => {
-    // 优先使用翻译键，如果没有映射则使用原始 title
-    const translationKey = route.path ? ROUTE_TITLE_MAP[route.path] : undefined
-    const label = translationKey ? t(translationKey) : route.meta?.title || route.path || ''
-
-    return {
-      id: route.path || '',
-      path: route.path || '#',
-      icon: route.meta?.icon,
-      label,
-      visible: true,
-    }
-  })
-
-  return [
-    {
-      id: 'default',
-      title: t('sidebar.menu'),
-      items,
-      visible: true,
-    },
-  ]
+      return {
+        key: route.path || '',
+        icon: Icon ? <Icon className="h-5 w-5" /> : undefined,
+        label: label,
+      }
+    })
 }
+
+// Logo 组件
+const SidebarLogo = memo(function SidebarLogo({ isCollapsed }: { isCollapsed: boolean }) {
+  return (
+    <div
+      className={cn(
+        'h-16 flex items-center shrink-0 border-b border-border/50',
+        isCollapsed ? 'justify-center px-2' : 'px-4 gap-3'
+      )}
+    >
+      <div className="h-9 w-9 rounded-lg bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center shrink-0 border border-primary/30">
+        <Layers className="h-5 w-5 text-primary" />
+      </div>
+      {!isCollapsed && (
+        <div className="flex flex-col min-w-0">
+          <span className="text-sm font-bold text-foreground truncate tracking-wide">
+            Templates
+          </span>
+          <span className="text-[10px] text-muted-foreground/60 font-mono">Frontend Template</span>
+        </div>
+      )}
+    </div>
+  )
+})
 
 // 主布局组件
 function Sidebar() {
+  const navigate = useNavigate()
+  const location = useLocation()
   const { preferences, toggleSidebar, updatePreferences } = useAppStore()
   const { t } = useTranslation('layout')
   const isCollapsed = preferences.sidebarCollapsed
 
-  // 将路由配置转换为导航分组
-  const navGroups = convertRoutesToNavGroups(menuRoutes, t)
+  // 将路由配置转换为菜单项
+  const menuItems = useMemo(() => convertRoutesToMenuItems(menuRoutes, t), [t])
 
   // 侧边栏宽度状态
   const [sidebarWidth, setSidebarWidth] = useState(
@@ -281,6 +168,20 @@ function Sidebar() {
   // 计算实际宽度
   const actualWidth = isCollapsed ? SIDEBAR_COLLAPSED_WIDTH : sidebarWidth
 
+  // 处理菜单点击
+  const handleMenuClick = useCallback(
+    ({ key }: { key: string }) => {
+      navigate(key)
+    },
+    [navigate]
+  )
+
+  // 获取当前选中的菜单项
+  const selectedKeys = useMemo(() => {
+    const currentPath = location.pathname
+    return [currentPath]
+  }, [location.pathname])
+
   // 快捷键支持
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -294,88 +195,96 @@ function Sidebar() {
   }, [toggleSidebar])
 
   return (
-    <aside
-      style={{ width: actualWidth }}
-      className={cn(
-        'relative flex flex-col shrink-0',
-        'bg-gradient-to-b from-card/60 to-card/40',
-        'border-r border-border',
-        'transition-[width] duration-200 ease-out'
-      )}
+    <Sider
+      width={actualWidth}
+      collapsed={isCollapsed}
+      collapsedWidth={SIDEBAR_COLLAPSED_WIDTH}
+      className="relative flex flex-col h-screen border-r border-border/50"
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        overflow: 'hidden',
+        height: '100vh',
+        position: 'fixed',
+        left: 0,
+        top: 0,
+        zIndex: 100,
+      }}
+      theme="light"
+      breakpoint="md"
+      onBreakpoint={broken => {
+        // 在移动端自动折叠侧边栏
+        if (broken && !isCollapsed) {
+          toggleSidebar()
+        }
+      }}
     >
-      {/* 拖动调整宽度手柄 - 仅展开时显示 */}
-      {!isCollapsed && <ResizeHandle onResize={handleResize} onResizeEnd={handleResizeEnd} />}
-
-      {/* Logo 区域 */}
       <div
-        className={cn(
-          'h-16 flex items-center shrink-0 border-b border-border/50',
-          isCollapsed ? 'justify-center px-2' : 'px-4 gap-3'
-        )}
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          height: '100%',
+          overflow: 'hidden',
+        }}
       >
-        <div className="h-9 w-9 rounded-lg bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center shrink-0 border border-primary/30">
-          <Layers className="h-5 w-5 text-primary" />
-        </div>
-        {!isCollapsed && (
-          <div className="flex flex-col min-w-0">
-            <span className="text-sm font-bold text-foreground truncate tracking-wide">
-              Templates
-            </span>
-            <span className="text-[10px] text-muted-foreground/60 font-mono">
-              Frontend Template
-            </span>
-          </div>
-        )}
-      </div>
+        {/* 拖动调整宽度手柄 - 仅展开时显示 */}
+        {!isCollapsed && <ResizeHandle onResize={handleResize} onResizeEnd={handleResizeEnd} />}
 
-      {/* 导航菜单 */}
-      <nav
-        className={cn(
-          'flex-1 overflow-y-auto overflow-x-hidden',
-          isCollapsed ? 'py-6' : 'py-4',
-          'scrollbar-thin scrollbar-track-transparent scrollbar-thumb-border/50'
-        )}
-      >
-        {navGroups.map((group, index) => (
-          <SidebarNavGroup
-            key={group.id}
-            group={group}
-            isCollapsed={isCollapsed}
-            isFirst={index === 0}
-          />
-        ))}
-      </nav>
+        {/* Logo 区域 */}
+        <SidebarLogo isCollapsed={isCollapsed} />
 
-      {/* 底部：收起菜单按钮 */}
-      <div
-        className={cn('py-3 border-t border-border/50 shrink-0', isCollapsed ? 'px-1.5' : 'px-2')}
-      >
-        <Tooltip
-          title={isCollapsed ? t('sidebar.expandMenuShortcut') : undefined}
-          placement="right"
-          mouseEnterDelay={0.3}
+        {/* 导航菜单 */}
+        <div
+          className="overflow-y-auto overflow-x-hidden py-2"
+          style={{
+            flex: '1 1 auto',
+            minHeight: 0,
+            display: 'flex',
+            flexDirection: 'column',
+          }}
         >
-          <button
-            onClick={handleToggle}
-            className={cn(
-              'flex items-center rounded-lg transition-all duration-150',
-              'text-muted-foreground hover:text-foreground hover:bg-card/80',
-              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
-              isCollapsed ? 'h-11 w-11 justify-center mx-auto' : 'h-10 w-full px-3 gap-3'
-            )}
+          <Menu
+            mode="inline"
+            selectedKeys={selectedKeys}
+            items={menuItems}
+            onClick={handleMenuClick}
+            className="flex-1"
+            style={{ border: 'none' }}
+          />
+        </div>
+
+        {/* 底部：收起菜单按钮 */}
+        <div
+          className={cn('py-3 border-t border-border/50 shrink-0', isCollapsed ? 'px-1.5' : 'px-2')}
+        >
+          <Tooltip
+            title={isCollapsed ? t('sidebar.expandMenuShortcut') : undefined}
+            placement="right"
+            mouseEnterDelay={0.3}
           >
-            {isCollapsed ? (
-              <PanelLeft className="h-5 w-5" />
-            ) : (
-              <>
-                <PanelLeftClose className="h-5 w-5 shrink-0" />
-                <span className="text-sm font-medium">{t('sidebar.collapseMenu')}</span>
-              </>
-            )}
-          </button>
-        </Tooltip>
+            <button
+              onClick={handleToggle}
+              className={cn(
+                'flex items-center rounded-lg transition-all duration-150',
+                'cursor-pointer',
+                'text-muted-foreground hover:text-foreground hover:bg-card/80',
+                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
+                isCollapsed ? 'h-11 w-11 justify-center mx-auto' : 'h-10 w-full px-3 gap-3'
+              )}
+            >
+              {isCollapsed ? (
+                <PanelLeft className="h-5 w-5" />
+              ) : (
+                <>
+                  <PanelLeftClose className="h-5 w-5 shrink-0" />
+                  <span className="text-sm font-medium">{t('sidebar.collapseMenu')}</span>
+                </>
+              )}
+            </button>
+          </Tooltip>
+        </div>
       </div>
-    </aside>
+    </Sider>
   )
 }
 

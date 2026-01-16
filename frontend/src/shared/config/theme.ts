@@ -143,7 +143,15 @@ export function getThemeTokens(themeClass: string): ThemeConfig['token'] {
  * 获取组件级别的主题配置
  */
 export function getThemeComponents(themeClass: string): ThemeConfig['components'] {
-  const radius = parseFloat(getThemeCSSVar('--radius', themeClass, '0.5')) * 16
+  // 获取 CSS 变量值（CSS 会根据主题 class 自动切换）
+  // 直接使用当前主题的 CSS 变量，fallback 仅作为最后的保险
+  const getVar = (name: string, fallback: string) => getThemeCSSVar(name, themeClass, fallback)
+
+  const radius = parseFloat(getVar('--radius', '0.5')) * 16
+  // 直接读取当前主题的 CSS 变量值，不需要根据 isDark 判断
+  const backgroundHsl = getVar('--background', '0 0% 100%')
+  const foregroundHsl = getVar('--foreground', '220 15% 20%')
+  const borderHsl = getVar('--border', '220 15% 85%')
 
   return {
     Button: {
@@ -164,6 +172,18 @@ export function getThemeComponents(themeClass: string): ThemeConfig['components'
     },
     Drawer: {
       borderRadius: radius,
+    },
+    Layout: {
+      // Layout.Header 的主题配置
+      headerBg: `hsl(${backgroundHsl})`,
+      headerColor: `hsl(${foregroundHsl})`,
+      headerPadding: '0 10px',
+      // Layout.Sider 的主题配置
+      siderBg: `hsl(${backgroundHsl})`,
+      // Layout.Content 的主题配置
+      bodyBg: `hsl(${backgroundHsl})`,
+      // 边框色
+      colorBorder: `hsl(${borderHsl})`,
     },
   }
 }
